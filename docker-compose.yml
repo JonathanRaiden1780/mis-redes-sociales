@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # Backend FastAPI + Agnes Video Generator
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - agnes
+    environment:
+      - AGNES_BASE_URL=http://agnes:8765
+      - AGNES_API_KEY=${AGNES_API_KEY:-}
+    volumes:
+      - ./agnes_data/working:/app/agnes_data/working
+    networks:
+      - social-net
+    restart: unless-stopped
+
+  # Agnes Video Generator (free tier)
+  agnes:
+    image: ghcr.io/lcy362/agnes-video-generator/free-short-video:6.3.0
+    ports:
+      - "8765:8765"
+    volumes:
+      - ./agnes_data/working:/app/.working_dir
+    environment:
+      - AGNES_API_KEY=${AGNES_API_KEY:-free}
+    networks:
+      - social-net
+    restart: unless-stopped
+
+  # Frontend (built separately, served by nginx or vite)
+  client:
+    build:
+      context: ./src/client
+      dockerfile: Dockerfile
+    ports:
+      - "7795:5173"
+    depends_on:
+      - app
+    networks:
+      - social-net
+    restart: unless-stopped
+
+networks:
+  social-net:
+    driver: bridge
+
+volumes:
+  agnes_data:
