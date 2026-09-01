@@ -1,4 +1,4 @@
-"""LLM-powered prompt amplification using Hermes/Nous Inference API."""
+"""LLM-powered prompt amplification using Ollama (local)."""
 
 import os
 import json
@@ -14,9 +14,8 @@ logger = logging.getLogger(__name__)
 @dataclass
 class LLMConfig:
     """Configuration for LLM amplification."""
-    base_url: str = "https://inference-api.nousresearch.com/v1"
-    api_key: str = ""
-    model: str = "poolside/laguna-xs-2.1:free"
+    base_url: str = "http://localhost:11537/v1"
+    model: str = "qwen2.5-coder:1.5b"
     max_tokens: int = 1024
     temperature: float = 0.7
     timeout: int = 30
@@ -42,44 +41,48 @@ class AmplifiedResult:
     error: str = ""
 
 
-# System prompt for the amplification task
-AMPLIFICATION_SYSTEM_PROMPT = """Eres un experto en marketing de redes sociales y generación de contenido con IA. 
-Tu trabajo es transformar ideas simples de promoción en prompts detallados para generar imágenes y videos virales.
+# System prompt for the amplification task - very explicit about format
+AMPLIFICATION_SYSTEM_PROMPT = """You are a social media marketing expert. Generate a JSON object for social media content creation.
 
-Recibirás una idea de promoción y debes generar un JSON estricto con esta estructura:
+CRITICAL: Respond ONLY with a valid JSON object. No markdown, no code blocks, no explanations.
 
+The JSON MUST have these exact keys with these types:
+- "prompt": string (detailed image generation prompt in English)
+- "image_prompt": string (specific image prompt with style, lighting, composition)
+- "video_script": array of 3 objects with "time", "scene", "description"
+- "hashtags": array of strings
+- "cta": string (short call to action)
+- "color_palette": array of 5 hex color strings like "#FF5733"
+- "style": string (one of: luxury, premium, elegant, budget, trending, hot)
+- "text_overlay": string (short text in CAPS)
+- "sale_type": string (one of: bundle_deal, percentage_discount, flash_promo, two_for_one, free_offer, limited_edition, promotion)
+- "emotion": string (one of: exciting, exclusive, sophisticated, enthusiastic, urgent)
+- "tone": string (one of: urgent, premium, professional, enthusiastic, value)
+- "psychological_triggers": array of strings (from: scarcity, social_proof, urgency, value, exclusivity)
+
+Example response:
 {
-  "prompt": "prompt detallado para generar imagen principal",
-  "image_prompt": "prompt específico para generación de imagen (detallado, con estilo, iluminación, composición)",
+  "prompt": "A luxury perfume bottle with golden accents...",
+  "image_prompt": "Professional product photography, luxury perfume bottle...",
   "video_script": [
-    {"time": "0-2s", "scene": "Hook", "description": "descripción visual del gancho inicial"},
-    {"time": "2-5s", "scene": "Offer", "description": "revelación de la oferta"},
-    {"time": "5-8s", "scene": "CTA", "description": "llamada a la acción final"}
+    {"time": "0-2s", "scene": "Hook", "description": "..."},
+    {"time": "2-5s", "scene": "Offer", "description": "..."},
+    {"time": "5-8s", "scene": "CTA", "description": "..."}
   ],
-  "hashtags": ["hashtag1", "hashtag2", "hashtag3"],
-  "cta": "llamada a la acción corta y directa",
-  "color_palette": ["#hex1", "#hex2", "#hex3", "#hex4", "#hex5"],
-  "style": "estilo visual (luxury/premium/elegant/budget/trending/hot)",
-  "text_overlay": "texto principal que aparece en la imagen/video",
-  "sale_type": "tipo de venta (bundle_deal/percentage_discount/flash_promo/two_for_one/free_offer/limited_edition/promotion)",
-  "emotion": "emoción principal (exciting/exclusive/sophisticated/enthusiastic/urgent)",
-  "tone": "tono (urgent/premium/professional/enthusiastic/value)",
-  "psychological_triggers": ["trigger1", "trigger2"]
-}
-
-Reglas:
-- Los prompts de imagen deben ser en INGLÉS y muy detallados (estilo, iluminación, composición, formato 9:16)
-- Los hashtags en español e inglés según la plataforma
-- El text_overlay debe ser corto, impactante y en MAYÚSCULAS
-- Los colores deben ser vibrantes y contrastantes
-- El video_script debe tener exactamente 3 escenas
-- psychological_triggers debe ser una lista de: scarcity, social_proof, urgency, value, exclusivity
-
-Responde SOLO con el JSON, sin markdown ni explicaciones."""
+  "hashtags": ["perfume", "luxury", "oferta"],
+  "cta": "Buy now!",
+  "color_palette": ["#1a1a2e", "#e2b714", "#f5e6ca", "#16213e", "#c9a227"],
+  "style": "luxury",
+  "text_overlay": "2X800 PESOS",
+  "sale_type": "bundle_deal",
+  "emotion": "exciting",
+  "tone": "urgent",
+  "psychological_triggers": ["urgency", "value"]
+}"""
 
 
 class LLMPromptAmplifier:
-    """Amplify prompts using LLM (Nous Inference API via Hermes)."""
+    """Amplify prompts using LLM (Ollama local)."""
 
     def __init__(self, config: LLMConfig | None = None) -> None:
         self.config = config or LLMConfig()
@@ -90,16 +93,12 @@ class LLMPromptAmplifier:
         if self._available is not None:
             return self._available
         
-        if not self.config.api_key:
-            # Try without auth (free tier)
-            try:
-                async with httpx.AsyncClient(timeout=5) as client:
-                    res = await client.get(f"{self.config.base_url}/models")
-                    self._available = res.status_code == 200
-            except Exception:
-                self._available = False
-        else:
-            self._available = True
+        try:
+            async with httpx.AsyncClient(timeout=5) as client:
+                res = await client.get(f"{self.config.base_url}/models")
+                self._available = res.status_code == 200
+        except Exception:
+            self._available = False
         
         return self._available
 
@@ -119,40 +118,39 @@ class LLMPromptAmplifier:
         """Call the LLM API."""
         messages = [
             {"role": "system", "content": AMPLIFICATION_SYSTEM_PROMPT},
-            {"role": "user", "content": f"Idea: {raw_idea}\nEstilo: {style_override or 'auto-detectar'}"},
+            {"role": "user", "content": f"Idea: {raw_idea}\nStyle: {style_override or 'auto-detect'}"},
         ]
-        
-        headers = {"Content-Type": "application/json"}
-        if self.config.api_key:
-            headers["Authorization"] = f"Bearer {self.config.api_key}"
         
         payload = {
             "model": self.config.model,
             "messages": messages,
             "max_tokens": self.config.max_tokens,
             "temperature": self.config.temperature,
+            "stream": False,
         }
         
         async with httpx.AsyncClient(timeout=self.config.timeout) as client:
             res = await client.post(
                 f"{self.config.base_url}/chat/completions",
                 json=payload,
-                headers=headers,
             )
             res.raise_for_status()
             data = res.json()
             return data["choices"][0]["message"]["content"]
 
     def _parse_response(self, response: str) -> AmplifiedResult:
-        """Parse LLM JSON response."""
-        # Clean response (remove markdown if present)
+        """Parse LLM JSON response with flexible format handling."""
+        # Clean response
         clean = response.strip()
-        if clean.startswith("```"):
-            clean = clean.split("\n", 1)[1]
+        
+        # Remove markdown code blocks
+        if clean.startswith("```json"):
+            clean = clean[7:]
+        elif clean.startswith("```"):
+            clean = clean[3:]
         if clean.endswith("```"):
-            clean = clean.rsplit("\n", 1)[0]
-        if clean.startswith("json"):
-            clean = clean[4:].strip()
+            clean = clean[:-3]
+        clean = clean.strip()
         
         try:
             data = json.loads(clean)
@@ -160,20 +158,59 @@ class LLMPromptAmplifier:
             logger.error(f"Failed to parse LLM response: {e}")
             return AmplifiedResult(success=False, error=f"Invalid JSON: {e}", raw_response=response)
         
+        # Extract values with flexible handling for nested objects
+        def extract_str(val) -> str:
+            if isinstance(val, str):
+                return val
+            if isinstance(val, dict):
+                return val.get("text", val.get("type", str(val)))
+            return str(val)
+        
+        def extract_list(val) -> list:
+            if isinstance(val, list):
+                return val
+            if isinstance(val, str):
+                return [val]
+            return []
+        
+        # Handle video_script - ensure it has the right format
+        video_script = data.get("video_script", [])
+        formatted_script = []
+        for i, scene in enumerate(video_script[:3]):  # Max 3 scenes
+            if isinstance(scene, dict):
+                formatted_script.append({
+                    "time": str(scene.get("time", f"{i*2}-{i*2+2}s")),
+                    "scene": str(scene.get("scene", f"Scene {i+1}")),
+                    "description": str(scene.get("description", "")),
+                })
+        
+        # Ensure we have exactly 3 scenes
+        while len(formatted_script) < 3:
+            formatted_script.append({
+                "time": f"{len(formatted_script)*2}-{len(formatted_script)*2+2}s",
+                "scene": ["Hook", "Offer", "CTA"][len(formatted_script)],
+                "description": "",
+            })
+        
+        # Handle color_palette - ensure 5 colors
+        colors = extract_list(data.get("color_palette", []))
+        while len(colors) < 5:
+            colors.append(["#1a1a2e", "#e2b714", "#f5e6ca", "#16213e", "#c9a227"][len(colors)])
+        
         return AmplifiedResult(
             success=True,
-            prompt=data.get("prompt", ""),
-            image_prompt=data.get("image_prompt", ""),
-            video_script=data.get("video_script", []),
-            hashtags=data.get("hashtags", []),
-            cta=data.get("cta", ""),
-            color_palette=data.get("color_palette", []),
-            style=data.get("style", ""),
-            text_overlay=data.get("text_overlay", ""),
-            sale_type=data.get("sale_type", ""),
-            emotion=data.get("emotion", ""),
-            tone=data.get("tone", ""),
-            psychological_triggers=data.get("psychological_triggers", []),
+            prompt=extract_str(data.get("prompt", "")),
+            image_prompt=extract_str(data.get("image_prompt", data.get("prompt", ""))),
+            video_script=formatted_script,
+            hashtags=extract_list(data.get("hashtags", [])),
+            cta=extract_str(data.get("cta", "")),
+            color_palette=colors[:5],
+            style=extract_str(data.get("style", "")),
+            text_overlay=extract_str(data.get("text_overlay", "")),
+            sale_type=extract_str(data.get("sale_type", "")),
+            emotion=extract_str(data.get("emotion", "")),
+            tone=extract_str(data.get("tone", "")),
+            psychological_triggers=extract_list(data.get("psychological_triggers", [])),
             raw_response=response,
         )
 
