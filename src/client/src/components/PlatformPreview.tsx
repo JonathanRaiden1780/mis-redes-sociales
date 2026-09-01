@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Copy, Check, Edit3 } from 'lucide-react'
+import { Copy, Check, Edit3, Image, Video, Loader2 } from 'lucide-react'
 import type { Platform } from '../types'
 
 interface PlatformPreviewProps {
@@ -8,15 +8,42 @@ interface PlatformPreviewProps {
   format: string
   hashtags: string[]
   color: string
+  campaignId: number
 }
 
-export default function PlatformPreview({ platform, prompt, format, hashtags, color }: PlatformPreviewProps) {
+export default function PlatformPreview({ platform, prompt, format, hashtags, color, campaignId }: PlatformPreviewProps) {
   const [copied, setCopied] = useState(false)
+  const [generating, setGenerating] = useState(false)
+  const [generatedType, setGeneratedType] = useState<string | null>(null)
 
   function copyToClipboard() {
     navigator.clipboard.writeText(prompt)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
+  }
+
+  async function generateContent(type: 'image' | 'video') {
+    setGenerating(true)
+    setGeneratedType(type)
+    try {
+      const res = await fetch(`/api/generate/${type}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ campaign_id: campaignId, platform: platform.name.toLowerCase() }),
+      })
+      const data = await res.json()
+      if (data.success) {
+        alert(`Generación de ${type} iniciada: ${data.task_id}`)
+      } else {
+        alert(`Error: ${data.message}`)
+      }
+    } catch (err) {
+      console.error(err)
+      alert('Error al generar contenido')
+    } finally {
+      setGenerating(false)
+      setGeneratedType(null)
+    }
   }
 
   const formatLabels: Record<string, string> = {
@@ -90,7 +117,7 @@ export default function PlatformPreview({ platform, prompt, format, hashtags, co
         )}
       </div>
 
-      <div style={{ display: 'flex', gap: '8px', paddingTop: '12px', borderTop: '1px solid #1e293b' }}>
+      <div style={{ display: 'flex', gap: '6px', paddingTop: '12px', borderTop: '1px solid #1e293b' }}>
         <button
           onClick={copyToClipboard}
           style={{
@@ -112,6 +139,52 @@ export default function PlatformPreview({ platform, prompt, format, hashtags, co
         >
           {copied ? <Check style={{ width: '14px', height: '14px' }} /> : <Copy style={{ width: '14px', height: '14px' }} />}
           {copied ? 'Copiado' : 'Copiar'}
+        </button>
+        <button
+          onClick={() => generateContent('image')}
+          disabled={generating}
+          style={{
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '6px',
+            padding: '8px',
+            borderRadius: '6px',
+            fontSize: '12px',
+            fontWeight: 500,
+            color: generating && generatedType === 'image' ? '#8b5cf6' : '#71717a',
+            background: 'transparent',
+            border: 'none',
+            cursor: generating ? 'not-allowed' : 'pointer',
+            transition: 'all 0.15s ease'
+          }}
+        >
+          {generating && generatedType === 'image' ? <Loader2 style={{ width: '14px', height: '14px', animation: 'spin 1s linear infinite' }} /> : <Image style={{ width: '14px', height: '14px' }} />}
+          Imagen
+        </button>
+        <button
+          onClick={() => generateContent('video')}
+          disabled={generating}
+          style={{
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '6px',
+            padding: '8px',
+            borderRadius: '6px',
+            fontSize: '12px',
+            fontWeight: 500,
+            color: generating && generatedType === 'video' ? '#8b5cf6' : '#71717a',
+            background: 'transparent',
+            border: 'none',
+            cursor: generating ? 'not-allowed' : 'pointer',
+            transition: 'all 0.15s ease'
+          }}
+        >
+          {generating && generatedType === 'video' ? <Loader2 style={{ width: '14px', height: '14px', animation: 'spin 1s linear infinite' }} /> : <Video style={{ width: '14px', height: '14px' }} />}
+          Video
         </button>
         <button style={{
           flex: 1,

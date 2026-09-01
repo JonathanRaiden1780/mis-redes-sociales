@@ -1,12 +1,12 @@
 """API endpoints for campaign management and history."""
 
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-from typing import List, Optional
 from datetime import datetime
 
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+
 from src.server.database import get_db
-from src.server.models.database import Campaign, GeneratedContent, DiffusionHistory
+from src.server.models.database import Campaign, DiffusionHistory, GeneratedContent
 
 router = APIRouter(prefix="/api/campaigns", tags=["campaigns"])
 
@@ -48,10 +48,10 @@ async def create_campaign(
     style: str = "",
     cta: str = "",
     text_overlay: str = "",
-    color_palette: Optional[list] = None,
-    hashtags: Optional[list] = None,
-    psychological_triggers: Optional[list] = None,
-    platforms: Optional[list] = None,
+    color_palette: list | None = None,
+    hashtags: list | None = None,
+    psychological_triggers: list | None = None,
+    platforms: list | None = None,
     diffusion_message: str = "",
     db: Session = Depends(get_db),
 ) -> dict:
@@ -81,10 +81,10 @@ async def create_campaign(
 @router.put("/{campaign_id}", response_model=dict)
 async def update_campaign(
     campaign_id: int,
-    name: Optional[str] = None,
-    raw_idea: Optional[str] = None,
-    amplified_prompt: Optional[str] = None,
-    status: Optional[str] = None,
+    name: str | None = None,
+    raw_idea: str | None = None,
+    amplified_prompt: str | None = None,
+    status: str | None = None,
     db: Session = Depends(get_db),
 ) -> dict:
     """Update a campaign."""
@@ -101,7 +101,7 @@ async def update_campaign(
     if status is not None:
         campaign.status = status
     
-    campaign.updated_at = datetime.utcnow()
+    campaign.updated_at = datetime.now(datetime.utc)
     db.commit()
     db.refresh(campaign)
     return campaign.to_dict()

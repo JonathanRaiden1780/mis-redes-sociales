@@ -1,7 +1,9 @@
 """Database models for the Social Media Content Engine."""
 
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, Text, DateTime, JSON
+
+from sqlalchemy import JSON, Column, DateTime, Integer, String, Text
+
 from src.server.database import Base
 
 

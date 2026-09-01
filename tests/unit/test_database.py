@@ -64,11 +64,22 @@ def test_get_campaign():
     """Test getting a campaign by ID."""
     db = SessionLocal()
     try:
-        campaign = db.query(Campaign).first()
+        # Create a specific campaign to find
+        test_campaign = Campaign(
+            name="Get Test Campaign",
+            raw_idea="get test idea",
+            sale_type="test_type",
+        )
+        db.add(test_campaign)
+        db.commit()
+        db.refresh(test_campaign)
+        
+        # Fetch by ID
+        campaign = db.query(Campaign).filter(Campaign.id == test_campaign.id).first()
         assert campaign is not None
         d = campaign.to_dict()
-        assert d["name"] == "Test Campaign"
-        assert d["sale_type"] == "bundle_deal"
+        assert d["name"] == "Get Test Campaign"
+        assert d["sale_type"] == "test_type"
         print("✅ test_get_campaign")
     finally:
         db.close()

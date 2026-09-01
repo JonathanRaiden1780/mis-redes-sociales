@@ -1,10 +1,10 @@
 """Database configuration and session management."""
 
-import os
+from collections.abc import Generator
 from pathlib import Path
+
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
-from typing import Generator
+from sqlalchemy.orm import declarative_base, sessionmaker
 
 # Database path
 DB_PATH = Path(__file__).parent.parent / "data" / "mis_redes.db"
@@ -34,5 +34,9 @@ def get_db() -> Generator:
 
 def init_db() -> None:
     """Initialize the database (create all tables)."""
-    from src.server.models.database import Campaign, GeneratedContent, DiffusionHistory  # noqa: F401
+    from src.server.models.database import (  # noqa: F401
+        Campaign,
+        DiffusionHistory,
+        GeneratedContent,
+    )
     Base.metadata.create_all(bind=engine)

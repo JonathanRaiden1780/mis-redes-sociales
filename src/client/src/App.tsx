@@ -176,6 +176,8 @@ function CampaignHistory({
               justifyContent: 'space-between',
               padding: '10px 12px',
               borderRadius: '8px',
+              background: 'rgba(255,255,255,0.02)',
+              border: '1px solid transparent',
               cursor: 'pointer',
               transition: 'all 0.15s ease'
             }}
@@ -229,6 +231,7 @@ export default function App() {
   const [result, setResult] = useState<AmplifyResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [campaigns, setCampaigns] = useState<Campaign[]>([])
+  const [currentCampaignId, setCurrentCampaignId] = useState<number | null>(null)
 
   async function loadCampaigns() {
     try {
@@ -254,6 +257,12 @@ export default function App() {
     }
   }
 
+  function handleResult(data: any) {
+    setResult(data)
+    if (data.campaign_id) {
+      setCurrentCampaignId(data.campaign_id)
+    }
+  }
 
   return (
     <div style={{ minHeight: '100vh', background: '#0f172a', color: '#e2e8f0' }}>
@@ -268,7 +277,7 @@ export default function App() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '32px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             <AmplifyPanel 
-              onResult={setResult} 
+              onResult={handleResult} 
               onLoading={setLoading}
               loading={loading}
               onSaved={loadCampaigns}
@@ -308,7 +317,7 @@ export default function App() {
             ) : result ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                 <ResultPanel result={result} />
-                <PlatformGrid result={result} />
+                <PlatformGrid result={result} campaignId={currentCampaignId || 0} />
               </div>
             ) : (
               <div style={{

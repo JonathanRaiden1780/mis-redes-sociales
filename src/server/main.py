@@ -7,6 +7,7 @@ from pydantic import BaseModel
 from src.server.core.amplifier import AmplificationResult, amplify
 from src.server.database import init_db
 from src.server.api.campaigns import router as campaigns_router
+from src.server.api.generate import router as generate_router
 
 # Initialize database
 init_db()
@@ -24,6 +25,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(campaigns_router)
+app.include_router(generate_router)
 
 
 class AmplifyRequest(BaseModel):

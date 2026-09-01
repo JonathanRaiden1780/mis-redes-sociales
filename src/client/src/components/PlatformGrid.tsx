@@ -3,6 +3,7 @@ import PlatformPreview from './PlatformPreview'
 
 interface PlatformGridProps {
   result: AmplifyResponse
+  campaignId: number
 }
 
 const platforms = [
@@ -12,7 +13,7 @@ const platforms = [
   { name: 'WhatsApp', icon: '💬', color: '#25D366' },
 ]
 
-export default function PlatformGrid({ result }: PlatformGridProps) {
+export default function PlatformGrid({ result, campaignId }: PlatformGridProps) {
   return (
     <div style={{
       background: 'rgba(15, 23, 42, 0.5)',
@@ -36,6 +37,7 @@ export default function PlatformGrid({ result }: PlatformGridProps) {
               format={pp.format}
               hashtags={pp.hashtags}
               color={platform.color}
+              campaignId={campaignId}
             />
           )
         })}
