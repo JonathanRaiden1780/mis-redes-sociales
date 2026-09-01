@@ -1,82 +1,134 @@
 # Mis Redes Sociales — Social Media Content Engine
 
-A multi-platform social media content engine that transforms simple promotional ideas into publishing-ready content (images + videos) and distributes them across Instagram, TikTok, Facebook, and WhatsApp (diffusion). Powered by AI prompt amplification and Agnes Video Generator.
+Motor de contenido para redes sociales que transforma ideas simples en publicaciones optimizadas para todas las plataformas. Amplificación de prompts con IA, generación de imágenes/video con Agnes, y difusión multi-plataforma (Instagram, TikTok, Facebook, WhatsApp).
 
-## 🚀 Features
+## Estado del Proyecto
 
-- **AI Prompt Amplifier**: Raw idea → structured, trend-optimized prompt
-- **Content Generation**: Images + videos via Agnes Video Generator (free)
-- **Multi-Platform Publishing**: Instagram, TikTok, Facebook
-- **WhatsApp Diffusion**: Broadcast offers/promotions to contacts
-- **Iterative Refinement**: Adjust pre-prompt → regenerate until satisfied
+| Componente | Estado | Descripción |
+|-----------|--------|-------------|
+| Backend API | ✅ Completo | FastAPI + SQLite + SQLAlchemy |
+| Frontend | ✅ Completo | React + TypeScript + Vite |
+| Prompt Amplifier | ✅ Completo | Parser + Intent + Builder + Adapter |
+| Persistencia | ✅ Completo | Campañas, Contenido, Difusiones |
+| Generación Agnes | ✅ Completo | Con fallback inteligente |
+| WhatsApp | ✅ Completo | Twilio API + difusión manual |
+| Publicación | ✅ Completo | Instagram/TikTok/Facebook APIs |
+| Historial | ✅ Completo | CRUD + detalle + eliminar |
+| Configuración | ✅ Completo | Estado de servicios + API keys |
+| Docker | ✅ Completo | docker-compose.yml para NAS |
 
-## 🛠️ Tech Stack
+## Arquitectura
 
-| Layer | Technology |
-|-------|------------|
-| Backend | FastAPI (Python) |
-| Frontend | React + Tailwind + pnpm |
-| AI Video/Image | Agnes Video Generator (free, self-hosted) |
-| WhatsApp | Twilio WhatsApp Business API |
-| Platforms | Meta Graph API + TikTok Content Posting API |
-| Database | SQLite / PostgreSQL |
-| Infrastructure | Docker Compose on NAS |
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        Frontend (React)                         │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐            │
+│  │  Dashboard   │  │  Historial  │  │ Configuración│            │
+│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘            │
+│         └─────────────────┼─────────────────┘                   │
+│                           │                                     │
+│  ┌────────────────────────┴────────────────────────┐           │
+│  │              AmplifyPanel + ResultPanel          │           │
+│  │         PlatformGrid + ManualDiffusion           │           │
+│  │              WhatsAppPanel + History             │           │
+│  └────────────────────────┬────────────────────────┘           │
+└───────────────────────────┼─────────────────────────────────────┘
+                            │ HTTP/JSON
+┌───────────────────────────┼─────────────────────────────────────┐
+│                      Backend (FastAPI)                           │
+│  ┌────────────────────────┴────────────────────────┐           │
+│  │                  API Routers                     │           │
+│  │  /api/amplify  /api/campaigns  /api/generate    │           │
+│  │  /api/diffuse  /api/whatsapp   /api/publish    │           │
+│  └────────────────────────┬────────────────────────┘           │
+│                           │                                     │
+│  ┌────────────────────────┴────────────────────────┐           │
+│  │                Core Services                     │           │
+│  │  Amplifier    ContentGen    SocialClients       │           │
+│  │  Parser       AgnesClient   WhatsAppBot         │           │
+│  │  Intent       ViMax         Instagram           │           │
+│  │  Builder      Fallback      TikTok             │           │
+│  │  Adapter                       Facebook         │           │
+│  └────────────────────────┬────────────────────────┘           │
+│                           │                                     │
+│  ┌────────────────────────┴────────────────────────┐           │
+│  │              Database (SQLite)                   │           │
+│  │  Campaign  GeneratedContent  DiffusionHistory   │           │
+│  └─────────────────────────────────────────────────┘           │
+└─────────────────────────────────────────────────────────────────┘
+                            │
+        ┌───────────────────┼───────────────────┐
+        │                   │                   │
+   ┌────┴────┐        ┌────┴────┐        ┌────┴────┐
+   │  Agnes  │        │ Twilio  │        │  Meta   │
+   │  (local)│        │  (API)  │        │ Graph   │
+   └─────────┘        └─────────┘        └─────────┘
+```
 
-## 📋 Requirements
+## Tech Stack
+
+| Capa | Tecnología | Propósito |
+|------|-----------|-----------|
+| Backend | FastAPI (Python) | API REST asíncrona |
+| Frontend | React 19 + TypeScript | UI interactiva |
+| Estilos | CSS inline + Design system | Sin dependencias externas |
+| Base de datos | SQLite + SQLAlchemy | Persistencia ligera |
+| IA Imágenes | Agnes Video Generator | Generación de contenido |
+| WhatsApp | Twilio Business API | Difusión automática |
+| Redes Sociales | Meta Graph API, TikTok API | Publicación automática |
+| Contenedores | Docker Compose | Despliegue en NAS |
+
+## Requisitos
 
 - Python 3.11+
 - pnpm 11.22.0+
-- Docker + Docker Compose
-- Agnes AI API key (free: https://platform.agnes-ai.com)
-- Twilio account (for WhatsApp)
+- Node.js 22+
+- Docker + Docker Compose (opcional)
 
-## 🚦 Quick Start
+## Inicio Rápido
 
 ```bash
-# 1. Clone the project
-git clone <repo-url>
+# 1. Clonar repositorio
+git clone https://github.com/JonathanRaiden1780/mis-redes-sociales.git
 cd mis-redes-sociales
 
-# 2. Configure environment
-cp .env.example .env
-# Edit .env with your API keys
+# 2. Backend
+python -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
 
-# 3. Start the full stack
-docker-compose up -d
+# 3. Frontend
+cd src/client
+pnpm install
+pnpm dev
 
-# Frontend: http://localhost:7795
-# Backend: http://localhost:8000
-# Agnes: http://localhost:8765
+# 4. Backend (otra terminal)
+cd ../..
+uvicorn src.server.main:app --reload
+
+# Acceder a http://localhost:5173
 ```
 
-## 📚 Documentation
+## Configuración de APIs
 
-- [SPEC-001: Social Media Content Engine](docs/specs/SPEC-001-social-media-engine.md) — Architecture and requirements
-- [SPEC-002: AI Prompt Amplifier](docs/specs/SPEC-002-ai-prompt-amplifier.md) — Pre-prompt engine design
-- [TASK-001: AI Prompt Amplifier](docs/tasks/TASK-001-prompt-amplifier.md) — Implementation plan
-- [TASK-003: Agnes Integration](docs/tasks/TASK-003-agnes-integration.md) — Video engine integration
-- [TASK-005: WhatsApp Diffusion](docs/tasks/TASK-005-whatsapp-diffusion.md) — WhatsApp bot plan
+Las APIs externas son opcionales. El sistema funciona sin ellas usando modo fallback.
 
-## 🔧 AIEP Compliance
-
-- **Package Manager**: pnpm only
-- **Workflow**: SPEC → TASK → implementation → tests → QA → commit
-- **Design**: Split-screen (MiNegocio style), CSS custom properties
-
-## 🏗️ Architecture
-
-```
-mis-redes-sociales/
-├── src/
-│   ├── client/          # React frontend
-│   └── server/          # FastAPI backend
-│       ├── api/         # REST endpoints
-│       └── core/        # AI clients, amplifiers, social clients
-├── agnes-video-generator/  # Sub-service (cloned)
-├── docker-compose.yml
-└── docs/specs/
+```bash
+# .env (opcional)
+AGNES_API_KEY=free
+TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxx
+TWILIO_AUTH_TOKEN=your_token
+INSTAGRAM_ACCESS_TOKEN=your_token
+FACEBOOK_ACCESS_TOKEN=your_token
 ```
 
-## 📄 License
+## Documentación
+
+- [MASTERPROMPT.md](MASTERPROMPT.md) — Contexto completo para IAs externas
+- [docs/specs/](docs/specs/) — Especificaciones técnicas (SPEC-XXX)
+- [docs/tasks/](docs/tasks/) — Planificación de tareas
+- [README.md](README.md) — Este archivo
+
+## Licencia
 
 MIT
