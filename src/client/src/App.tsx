@@ -3,6 +3,7 @@ import { Sparkles, Zap, LayoutDashboard, History, Settings, Trash2, RotateCcw } 
 import AmplifyPanel from './components/AmplifyPanel'
 import ResultPanel from './components/ResultPanel'
 import PlatformGrid from './components/PlatformGrid'
+import ManualDiffusion from './components/ManualDiffusion'
 import type { AmplifyResponse } from './types'
 
 interface Campaign {
@@ -318,6 +319,7 @@ export default function App() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                 <ResultPanel result={result} />
                 <PlatformGrid result={result} campaignId={currentCampaignId || 0} />
+                <ManualDiffusion result={result} />
               </div>
             ) : (
               <div style={{
