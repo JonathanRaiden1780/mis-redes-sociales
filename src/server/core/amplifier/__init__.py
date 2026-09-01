@@ -33,44 +33,29 @@ def amplify(
     # Try LLM enhancement first
     try:
         from src.server.core.llm_amplifier import get_amplifier
-        import asyncio
         
         amplifier = get_amplifier()
         
-        # Check if LLM is available (async)
-        try:
-            loop = asyncio.get_event_loop()
-            if loop.is_running():
-                # We're in an async context, create a new loop
-                import concurrent.futures
-                with concurrent.futures.ThreadPoolExecutor() as executor:
-                    future = executor.submit(asyncio.run, amplifier.is_available())
-                    llm_available = future.result(timeout=5)
-            else:
-                llm_available = asyncio.run(amplifier.is_available())
-        except Exception:
-            llm_available = False
+        # Check if LLM is available (async) - use ThreadPoolExecutor to avoid event loop issues
+        import concurrent.futures
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            future = executor.submit(lambda: __import__('asyncio').run(amplifier.is_available()))
+            llm_available = future.result(timeout=5)
         
         if llm_available:
             # Use LLM for amplification
-            try:
-                loop = asyncio.get_event_loop()
-                if loop.is_running():
-                    import concurrent.futures
-                    with concurrent.futures.ThreadPoolExecutor() as executor:
-                        future = executor.submit(asyncio.run, amplifier.amplify(raw_idea, style_override or ""))
-                        llm_result = future.result(timeout=30)
-                else:
-                    llm_result = asyncio.run(amplifier.amplify(raw_idea, style_override or ""))
-                
-                if llm_result.success:
-                    return _build_from_llm(llm_result)
-            except Exception as e:
-                import logging
-                logging.getLogger(__name__).warning(f"LLM amplification failed, using fallback: {e}")
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                future = executor.submit(
+                    lambda: __import__('asyncio').run(amplifier.amplify(raw_idea, style_override or ""))
+                )
+                llm_result = future.result(timeout=30)
+            
+            if llm_result.success:
+                return _build_from_llm(llm_result, raw_idea)
     
-    except Exception:
-        pass
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).warning(f"LLM amplification failed, using fallback: {e}")
     
     # Fallback to rule-based system
     parsed = parse_idea(raw_idea)
@@ -89,12 +74,16 @@ def amplify(
     )
 
 
-def _build_from_llm(llm_result) -> AmplificationResult:
+def _build_from_llm(llm_result, raw_idea: str = "") -> AmplificationResult:
     """Build AmplificationResult from LLM output."""
-    from .parser import ParsedIdea
+    from .parser import ParsedIdea, parse_idea
     from .intent_analyzer import IntentAnalysis
     from .prompt_builder import AmplifiedPrompt
-    from .platform_adapter import PlatformPrompt, adapt_for_platform
+    from .platform_adapter import PlatformPrompt
+    
+    # Parse the raw idea to get structured data (for compatibility)
+    # Use raw_idea if provided, otherwise use text_overlay
+    parsed = parse_idea(raw_idea or llm_result.text_overlay or llm_result.prompt)
     
     # Build platform prompts from LLM output
     platform_prompts = {}
@@ -133,7 +122,7 @@ def _build_from_llm(llm_result) -> AmplificationResult:
     diffusion = f"🔥 {llm_result.text_overlay}\n📩 {llm_result.cta}\n{' '.join(llm_result.hashtags[:5])}"
     
     return AmplificationResult(
-        parsed_idea=ParsedIdea(raw_text=llm_result.text_overlay),
+        parsed_idea=parsed,
         intent=intent,
         amplified_prompt=amplified,
         platform_prompts=platform_prompts,

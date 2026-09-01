@@ -1,11 +1,19 @@
 """Content generation service with Agnes integration and fallback."""
 
 import logging
+import os
 import httpx
 from dataclasses import dataclass, field
 from typing import Any
 
 from src.server.core.agnes_client import AgnesClient, AgnesConfig, TaskStatus
+
+# Load .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
 logger = logging.getLogger(__name__)
 
@@ -13,8 +21,8 @@ logger = logging.getLogger(__name__)
 @dataclass
 class GenerationConfig:
     """Configuration for content generation."""
-    agnes_base_url: str = "http://localhost:8765"
-    agnes_api_key: str = ""
+    agnes_base_url: str = os.getenv("AGNES_BASE_URL", "https://api.agnes.ai")
+    agnes_api_key: str = os.getenv("AGNES_API_KEY", "")
     default_mode: str = "simple"
     use_fallback: bool = False  # Force fallback mode
 
