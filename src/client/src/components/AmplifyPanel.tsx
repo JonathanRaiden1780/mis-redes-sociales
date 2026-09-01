@@ -5,6 +5,7 @@ interface AmplifyPanelProps {
   onResult: (result: any) => void
   onLoading: (loading: boolean) => void
   loading: boolean
+  onSaved?: () => void
 }
 
 const examples = [
@@ -14,21 +15,32 @@ const examples = [
   'nueva colección de lujo, exclusivo',
 ]
 
-export default function AmplifyPanel({ onResult, onLoading, loading }: AmplifyPanelProps) {
+export default function AmplifyPanel({ onResult, onLoading, loading, onSaved }: AmplifyPanelProps) {
   const [idea, setIdea] = useState('')
   const [style, setStyle] = useState('')
+  const [saved, setSaved] = useState(false)
 
   async function handleAmplify() {
     if (!idea.trim()) return
     onLoading(true)
+    setSaved(false)
     try {
       const res = await fetch('/api/amplify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idea, style_override: style || undefined }),
+        body: JSON.stringify({ 
+          idea, 
+          style_override: style || undefined,
+          save_campaign: true,
+          campaign_name: idea.slice(0, 40)
+        }),
       })
       const data = await res.json()
       onResult(data)
+      if (data.campaign_id) {
+        setSaved(true)
+        onSaved?.()
+      }
     } catch (err) {
       console.error(err)
     } finally {
@@ -65,6 +77,7 @@ export default function AmplifyPanel({ onResult, onLoading, loading }: AmplifyPa
           </label>
           <div style={{ position: 'relative' }}>
             <textarea
+              id="idea-input"
               style={{
                 width: '100%',
                 padding: '12px 14px',
@@ -161,6 +174,20 @@ export default function AmplifyPanel({ onResult, onLoading, loading }: AmplifyPa
             </>
           )}
         </button>
+
+        {saved && (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '8px 12px',
+            borderRadius: '6px',
+            background: 'rgba(16, 185, 129, 0.1)',
+            border: '1px solid rgba(16, 185, 129, 0.2)'
+          }}>
+            <span style={{ fontSize: '12px', color: '#34d399' }}>✓ Guardada en historial</span>
+          </div>
+        )}
       </div>
 
       <div style={{ height: '1px', background: '#1e293b', margin: '20px 0' }} />

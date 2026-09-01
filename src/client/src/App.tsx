@@ -1,9 +1,21 @@
-import { useState } from 'react'
-import { Sparkles, Zap, LayoutDashboard, History, Settings } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Sparkles, Zap, LayoutDashboard, History, Settings, Trash2, RotateCcw } from 'lucide-react'
 import AmplifyPanel from './components/AmplifyPanel'
 import ResultPanel from './components/ResultPanel'
 import PlatformGrid from './components/PlatformGrid'
 import type { AmplifyResponse } from './types'
+
+interface Campaign {
+  id: number
+  name: string
+  raw_idea: string
+  sale_type: string
+  emotion: string
+  tone: string
+  style: string
+  status: string
+  created_at: string
+}
 
 function Header() {
   return (
@@ -48,9 +60,12 @@ function Header() {
               fontWeight: 500,
               color: 'white',
               background: 'rgba(255,255,255,0.05)',
-              textDecoration: 'none'
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
             }}>
-              <LayoutDashboard style={{ width: '14px', height: '14px', marginRight: '6px', display: 'inline' }} />
+              <LayoutDashboard style={{ width: '14px', height: '14px' }} />
               Dashboard
             </a>
             <a href="#" style={{
@@ -59,9 +74,12 @@ function Header() {
               fontSize: '13px',
               fontWeight: 500,
               color: '#94a3b8',
-              textDecoration: 'none'
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
             }}>
-              <History style={{ width: '14px', height: '14px', marginRight: '6px', display: 'inline' }} />
+              <History style={{ width: '14px', height: '14px' }} />
               Historial
             </a>
             <a href="#" style={{
@@ -70,9 +88,12 @@ function Header() {
               fontSize: '13px',
               fontWeight: 500,
               color: '#94a3b8',
-              textDecoration: 'none'
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
             }}>
-              <Settings style={{ width: '14px', height: '14px', marginRight: '6px', display: 'inline' }} />
+              <Settings style={{ width: '14px', height: '14px' }} />
               Configuración
             </a>
           </nav>
@@ -112,9 +133,127 @@ function Header() {
   )
 }
 
+function CampaignHistory({ 
+  campaigns, 
+  onSelect, 
+  onDelete,
+}: { 
+  campaigns: Campaign[]
+  onSelect: (idea: string) => void
+  onDelete: (id: number) => void
+}) {
+  if (campaigns.length === 0) {
+    return (
+      <div style={{
+        background: 'rgba(15, 23, 42, 0.5)',
+        border: '1px solid #1e293b',
+        borderRadius: '12px',
+        padding: '24px',
+        textAlign: 'center'
+      }}>
+        <p style={{ fontSize: '13px', color: '#64748b' }}>No hay campañas aún</p>
+      </div>
+    )
+  }
+
+  return (
+    <div style={{
+      background: 'rgba(15, 23, 42, 0.5)',
+      border: '1px solid #1e293b',
+      borderRadius: '12px',
+      padding: '16px'
+    }}>
+      <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'white', marginBottom: '12px' }}>
+        Historial de Campañas
+      </h3>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '300px', overflowY: 'auto' }}>
+        {campaigns.map((c) => (
+          <div
+            key={c.id}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '10px 12px',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ fontSize: '12px', fontWeight: 500, color: 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {c.name}
+              </p>
+              <p style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>
+                {c.sale_type} · {c.emotion} · {c.created_at?.slice(0, 10)}
+              </p>
+            </div>
+            <div style={{ display: 'flex', gap: '4px', marginLeft: '8px' }}>
+              <button
+                onClick={() => onSelect(c.raw_idea)}
+                title="Reutilizar"
+                style={{
+                  padding: '4px',
+                  borderRadius: '4px',
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#71717a',
+                  cursor: 'pointer'
+                }}
+              >
+                <RotateCcw style={{ width: '14px', height: '14px' }} />
+              </button>
+              <button
+                onClick={() => onDelete(c.id)}
+                title="Eliminar"
+                style={{
+                  padding: '4px',
+                  borderRadius: '4px',
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#71717a',
+                  cursor: 'pointer'
+                }}
+              >
+                <Trash2 style={{ width: '14px', height: '14px' }} />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export default function App() {
   const [result, setResult] = useState<AmplifyResponse | null>(null)
   const [loading, setLoading] = useState(false)
+  const [campaigns, setCampaigns] = useState<Campaign[]>([])
+
+  async function loadCampaigns() {
+    try {
+      const res = await fetch('/api/campaigns/')
+      const data = await res.json()
+      setCampaigns(data.campaigns || [])
+    } catch (err) {
+      console.error('Failed to load campaigns:', err)
+    }
+  }
+
+  useEffect(() => {
+    loadCampaigns()
+  }, [])
+
+  async function handleDelete(id: number) {
+    if (!confirm('¿Eliminar esta campaña?')) return
+    try {
+      await fetch(`/api/campaigns/${id}`, { method: 'DELETE' })
+      loadCampaigns()
+    } catch (err) {
+      console.error('Failed to delete:', err)
+    }
+  }
+
 
   return (
     <div style={{ minHeight: '100vh', background: '#0f172a', color: '#e2e8f0' }}>
@@ -127,8 +266,21 @@ export default function App() {
           Transforma una idea simple en publicaciones optimizadas para todas tus redes en segundos.
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '32px' }}>
-          <div>
-            <AmplifyPanel onResult={setResult} onLoading={setLoading} loading={loading} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <AmplifyPanel 
+              onResult={setResult} 
+              onLoading={setLoading}
+              loading={loading}
+              onSaved={loadCampaigns}
+            />
+            <CampaignHistory 
+              campaigns={campaigns}
+              onSelect={(idea) => {
+                const input = document.getElementById('idea-input') as HTMLTextAreaElement
+                if (input) input.value = idea
+              }}
+              onDelete={handleDelete}
+            />
           </div>
           <div>
             {loading ? (
