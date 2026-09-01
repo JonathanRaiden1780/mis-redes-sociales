@@ -8,7 +8,7 @@ interface PlatformPreviewProps {
   color: string
 }
 
-export default function PlatformPreview({ platform, prompt, format, hashtags, color }: PlatformPreviewProps) {
+export default function PlatformPreview({ platform, prompt, format, hashtags }: PlatformPreviewProps) {
   const formatLabels: Record<string, string> = {
     '9:16': 'Story / Reel',
     '16:9': 'Feed Horizontal',
@@ -16,42 +16,30 @@ export default function PlatformPreview({ platform, prompt, format, hashtags, co
   }
 
   return (
-    <div className="card p-5">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div 
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
-            style={{ background: `${color}22`, border: `1px solid ${color}44` }}
-          >
-            {platform.icon}
-          </div>
+    <div className="surface surface-hover p-4">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2.5">
+          <span className="text-lg">{platform.icon}</span>
           <div>
-            <span className="font-semibold text-white">{platform.name}</span>
-            <p className="text-xs text-gray-500">{formatLabels[format] || format}</p>
+            <span className="text-sm font-medium text-white">{platform.name}</span>
+            <p className="text-tertiary">{formatLabels[format] || format}</p>
           </div>
         </div>
-        <span className="text-xs px-2.5 py-1 rounded-lg bg-white/5 text-gray-400 font-medium">
-          {format}
-        </span>
+        <span className="text-tertiary font-mono text-xs">{format}</span>
       </div>
       
-      <div 
-        className="rounded-xl p-4 mb-4 min-h-[100px] flex items-center justify-center"
-        style={{ background: `linear-gradient(135deg, ${color}11, ${color}22)` }}
-      >
-        <p className="text-sm text-gray-300 text-center leading-relaxed">
-          {prompt.slice(0, 180)}...
-        </p>
-      </div>
+      <p className="text-xs text-[#71717a] leading-relaxed mb-3 line-clamp-3">
+        {prompt.slice(0, 160)}...
+      </p>
       
-      <div className="flex flex-wrap gap-1.5">
-        {hashtags.slice(0, 4).map((tag, i) => (
-          <span key={i} className="tag bg-blue-500/15 text-blue-300">
+      <div className="flex flex-wrap gap-1">
+        {hashtags.slice(0, 3).map((tag, i) => (
+          <span key={i} className="badge bg-blue-500/10 text-blue-400">
             {tag}
           </span>
         ))}
-        {hashtags.length > 4 && (
-          <span className="tag bg-white/5 text-gray-500">+{hashtags.length - 4}</span>
+        {hashtags.length > 3 && (
+          <span className="badge bg-[#27272a] text-[#52525b]">+{hashtags.length - 3}</span>
         )}
       </div>
     </div>

@@ -14,13 +14,10 @@ const platforms = [
 
 export default function PlatformGrid({ result }: PlatformGridProps) {
   return (
-    <div className="card p-6">
-      <div className="flex items-center gap-2 mb-6">
-        <span className="text-2xl">📱</span>
-        <h2 className="text-lg font-bold">Prompts por Plataforma</h2>
-      </div>
+    <div className="surface p-5">
+      <h2 className="text-sm font-medium text-white mb-4">Prompts por Plataforma</h2>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {platforms.map((platform) => {
           const pp = result.platform_prompts[platform.name.toLowerCase()]
           if (!pp) return null

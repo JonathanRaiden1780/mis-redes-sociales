@@ -9,31 +9,25 @@ export default function App() {
   const [loading, setLoading] = useState(false)
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white">
+    <div className="min-h-screen bg-[#09090b]">
       {/* Header */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#0a0a0f]/80 border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-lg shadow-lg shadow-indigo-500/20">
-              MR
-            </div>
-            <div>
-              <h1 className="text-lg font-bold gradient-text">Mis Redes Sociales</h1>
-              <p className="text-xs text-gray-500">AI Content Engine</p>
-            </div>
-          </div>
+      <header className="border-b border-[#27272a]">
+        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="pulse-dot" />
-            <span className="text-xs text-gray-400">Activo</span>
+            <div className="w-7 h-7 rounded-md bg-white flex items-center justify-center">
+              <span className="text-black text-xs font-bold">MR</span>
+            </div>
+            <span className="text-sm font-medium text-white">Mis Redes Sociales</span>
           </div>
+          <span className="text-tertiary">v0.1</span>
         </div>
       </header>
 
       {/* Main */}
-      <main className="max-w-7xl mx-auto p-6 lg:p-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Left Panel - Amplify */}
-          <div className="lg:col-span-4">
+      <main className="max-w-6xl mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Left - Input */}
+          <div className="lg:col-span-5">
             <AmplifyPanel 
               onResult={setResult} 
               onLoading={setLoading}
@@ -41,28 +35,22 @@ export default function App() {
             />
           </div>
 
-          {/* Right Panel - Results */}
-          <div className="lg:col-span-8">
+          {/* Right - Results */}
+          <div className="lg:col-span-7">
             {loading ? (
-              <div className="card p-12 flex flex-col items-center justify-center min-h-[400px]">
-                <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-6" />
-                <p className="text-gray-300 font-medium">Amplificando tu idea...</p>
-                <p className="text-gray-500 text-sm mt-1">Generando prompts optimizados</p>
+              <div className="surface p-12 flex flex-col items-center justify-center min-h-[300px]" role="status" aria-label="Cargando">
+                <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin mb-3" />
+                <span className="text-secondary">Amplificando...</span>
               </div>
             ) : result ? (
-              <div className="space-y-6 fade-in">
+              <div className="space-y-6 animate-fade">
                 <ResultPanel result={result} />
                 <PlatformGrid result={result} />
               </div>
             ) : (
-              <div className="card p-12 text-center min-h-[400px] flex flex-col items-center justify-center">
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center mb-6">
-                  <span className="text-4xl">🚀</span>
-                </div>
-                <h2 className="text-xl font-bold mb-2">Bienvenido al AI Content Engine</h2>
-                <p className="text-gray-400 max-w-md">
-                  Introduce tu idea de promoción y amplifícala automáticamente para todas las plataformas
-                </p>
+              <div className="surface p-12 text-center min-h-[300px] flex flex-col items-center justify-center">
+                <p className="text-secondary mb-1">Sin resultado</p>
+                <p className="text-tertiary">Introduce una idea y presiona Amplificar</p>
               </div>
             )}
           </div>

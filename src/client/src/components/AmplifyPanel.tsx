@@ -7,10 +7,10 @@ interface AmplifyPanelProps {
 }
 
 const examples = [
-  { text: 'promoción de perfumes 2x800 pesos', icon: '🌸' },
-  { text: '2x1 en zapatos 500 pesos', icon: '👟' },
-  { text: 'descuento 30% en electrónica', icon: '💻' },
-  { text: 'nueva colección de lujo', icon: '✨' },
+  'promoción de perfumes 2x800 pesos',
+  '2x1 en zapatos 500 pesos, oferta limitada',
+  'descuento 30% en electrónica, solo hoy',
+  'nueva colección de lujo, exclusivo',
 ]
 
 export default function AmplifyPanel({ onResult, onLoading, loading }: AmplifyPanelProps) {
@@ -36,20 +36,19 @@ export default function AmplifyPanel({ onResult, onLoading, loading }: AmplifyPa
   }
 
   return (
-    <div className="card p-6 sticky top-24">
-      <div className="flex items-center gap-2 mb-6">
-        <span className="text-2xl">🧠</span>
-        <h2 className="text-lg font-bold">AI Prompt Amplifier</h2>
+    <div className="surface p-5 space-y-5">
+      <div>
+        <h2 className="text-sm font-medium text-white mb-1">Prompt de Amplificación</h2>
+        <p className="text-tertiary">Convierte tu idea en contenido para redes</p>
       </div>
-      
+
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            Tu idea de promoción
-          </label>
+          <label className="label" htmlFor="idea-input">Tu idea</label>
           <textarea
-            className="input-field w-full text-white p-4 rounded-xl resize-none text-sm"
-            rows={4}
+            id="idea-input"
+            className="input resize-none"
+            rows={3}
             placeholder="Ej: promoción de perfumes 2x800 pesos"
             value={idea}
             onChange={(e) => setIdea(e.target.value)}
@@ -57,44 +56,44 @@ export default function AmplifyPanel({ onResult, onLoading, loading }: AmplifyPa
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            Estilo (opcional)
-          </label>
+          <label className="label" htmlFor="style-select">Estilo</label>
           <select
-            className="input-field w-full text-white p-3 rounded-xl text-sm"
+            id="style-select"
+            className="input"
             value={style}
             onChange={(e) => setStyle(e.target.value)}
           >
-            <option value="">🎯 Auto-detectar</option>
-            <option value="luxury">💎 Lujo</option>
-            <option value="premium">⭐ Premium</option>
-            <option value="elegant">🌙 Elegante</option>
-            <option value="budget">💰 Económico</option>
-            <option value="trending">🔥 Tendencia</option>
-            <option value="hot">🌶️ Hot</option>
+            <option value="">Auto-detectar</option>
+            <option value="luxury">Lujo</option>
+            <option value="premium">Premium</option>
+            <option value="elegant">Elegante</option>
+            <option value="budget">Económico</option>
+            <option value="trending">Tendencia</option>
+            <option value="hot">Hot</option>
           </select>
         </div>
 
         <button
           onClick={handleAmplify}
           disabled={loading || !idea.trim()}
-          className="btn-primary w-full text-white px-6 py-3.5 rounded-xl font-semibold text-sm"
+          className="btn btn-primary w-full"
         >
-          {loading ? '⏳ Amplificando...' : '🚀 Amplificar Idea'}
+          {loading ? 'Amplificando...' : 'Amplificar'}
         </button>
       </div>
 
-      <div className="mt-6 pt-6 border-t border-white/5">
-        <p className="text-xs text-gray-500 mb-3">Ejemplos rápidos:</p>
-        <div className="grid grid-cols-2 gap-2">
+      <div className="divider" />
+
+      <div>
+        <p className="text-tertiary mb-2">Ejemplos</p>
+        <div className="flex flex-wrap gap-1.5">
           {examples.map((ex, i) => (
             <button
               key={i}
-              onClick={() => setIdea(ex.text)}
-              className="text-xs px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white transition-all text-left"
+              onClick={() => setIdea(ex)}
+              className="text-xs px-2.5 py-1.5 rounded-md border border-[#27272a] text-[#71717a] hover:text-white hover:border-[#3f3f46] transition-colors"
             >
-              <span className="mr-1">{ex.icon}</span>
-              {ex.text.slice(0, 18)}...
+              {ex.length > 28 ? ex.slice(0, 28) + '...' : ex}
             </button>
           ))}
         </div>
