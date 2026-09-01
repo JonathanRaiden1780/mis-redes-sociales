@@ -1,20 +1,41 @@
 """FastAPI main application entry point."""
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from src.server.core.amplifier import AmplificationResult, amplify
+from src.server.database import init_db
+from src.server.api.campaigns import router as campaigns_router
+
+# Initialize database
+init_db()
 
 app = FastAPI(title="Mis Redes Sociales API", version="0.1.0")
+
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Include routers
+app.include_router(campaigns_router)
 
 
 class AmplifyRequest(BaseModel):
     idea: str
     style_override: str | None = None
+    save_campaign: bool = False
+    campaign_name: str | None = None
 
 
 class AmplifyResponse(BaseModel):
     success: bool
+    campaign_id: int | None = None
     amplified_prompt: str
     image_prompt: str
     video_script: list[dict]
@@ -49,8 +70,39 @@ async def amplify_prompt(request: AmplifyRequest) -> AmplifyResponse:
         for k, v in result.platform_prompts.items()
     }
 
+    # Optionally save as campaign
+    campaign_id = None
+    if request.save_campaign:
+        from src.server.database import SessionLocal
+        from src.server.models.database import Campaign
+        db = SessionLocal()
+        try:
+            campaign = Campaign(
+                name=request.campaign_name or f"Campaign: {request.idea[:30]}...",
+                raw_idea=request.idea,
+                amplified_prompt=ap.image_prompt,
+                sale_type=result.intent.sale_type,
+                emotion=result.intent.emotion,
+                tone=result.intent.tone,
+                style=ap.style,
+                cta=result.intent.cta,
+                text_overlay=ap.text_overlay,
+                color_palette=ap.color_palette,
+                hashtags=ap.hashtags,
+                psychological_triggers=result.intent.psychological_triggers,
+                platforms=list(result.platform_prompts.keys()),
+                diffusion_message=result.diffusion_message,
+            )
+            db.add(campaign)
+            db.commit()
+            db.refresh(campaign)
+            campaign_id = campaign.id
+        finally:
+            db.close()
+
     return AmplifyResponse(
         success=True,
+        campaign_id=campaign_id,
         amplified_prompt=ap.image_prompt,
         image_prompt=ap.image_prompt,
         video_script=ap.video_script,
@@ -79,12 +131,7 @@ async def get_platforms() -> dict:
     """List supported platforms."""
     return {
         "platforms": ["instagram", "tiktok", "facebook", "whatsapp"],
-        "formats": {
-            "instagram": "9:16",
-            "tiktok": "9:16",
-            "facebook": "16:9",
-            "whatsapp": "1:1",
-        },
+        "formats": {"instagram": "9:16", "tiktok": "9:16", "facebook": "16:9", "whatsapp": "1:1"},
     }
 
 
@@ -93,14 +140,7 @@ async def get_categories() -> dict:
     """List available product categories."""
     return {
         "categories": [
-            "perfumes",
-            "moda",
-            "electrónica",
-            "belleza",
-            "hogar",
-            "deportes",
-            "alimentación",
-            "viajes",
-            "tecnología",
+            "perfumes", "moda", "electrónica", "belleza", "hogar",
+            "deportes", "alimentación", "viajes", "tecnología",
         ],
     }
