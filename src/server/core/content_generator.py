@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class GenerationConfig:
     """Configuration for content generation."""
-    agnes_base_url: str = os.getenv("AGNES_BASE_URL", "https://api.agnes.ai")
+    agnes_base_url: str = os.getenv("AGNES_BASE_URL", "http://localhost:8765")
     agnes_api_key: str = os.getenv("AGNES_API_KEY", "")
     default_mode: str = "simple"
     use_fallback: bool = False  # Force fallback mode

@@ -39,7 +39,7 @@ def test_agnes_client_creation():
 def test_agnes_config_defaults():
     """Test AgnesConfig defaults."""
     config = AgnesConfig()
-    assert config.base_url == "http://localhost:8765"
+    assert config.base_url == "https://api.agnes.ai"
     assert config.api_key == ""
     assert config.timeout == 120
     print("✅ test_agnes_config_defaults")

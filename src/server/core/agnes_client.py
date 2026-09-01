@@ -39,7 +39,7 @@ class TaskResult:
 class AgnesConfig:
     """Configuration for the Agnes client."""
 
-    base_url: str = "https://api.agnes.ai"
+    base_url: str = "http://localhost:8765"
     api_key: str = ""
     timeout: int = 120
 
