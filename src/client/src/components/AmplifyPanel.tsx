@@ -8,10 +8,10 @@ interface AmplifyPanelProps {
 }
 
 const examples = [
-  { text: 'promoción de perfumes 2x800 pesos', icon: '🌸' },
-  { text: '2x1 en zapatos 500 pesos, oferta limitada', icon: '👟' },
-  { text: 'descuento 30% en electrónica, solo hoy', icon: '💻' },
-  { text: 'nueva colección de lujo, exclusivo', icon: '✨' },
+  'promoción de perfumes 2x800 pesos',
+  '2x1 en zapatos 500 pesos, oferta limitada',
+  'descuento 30% en electrónica, solo hoy',
+  'nueva colección de lujo, exclusivo',
 ]
 
 export default function AmplifyPanel({ onResult, onLoading, loading }: AmplifyPanelProps) {
@@ -37,38 +37,78 @@ export default function AmplifyPanel({ onResult, onLoading, loading }: AmplifyPa
   }
 
   return (
-    <div className="card space-y-5">
-      <div className="flex items-center gap-2">
-        <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
-          <Wand2 className="w-4 h-4 text-purple-400" />
+    <div style={{
+      background: 'rgba(15, 23, 42, 0.5)',
+      border: '1px solid #1e293b',
+      borderRadius: '12px',
+      padding: '24px'
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+        <div style={{
+          width: '32px',
+          height: '32px',
+          borderRadius: '8px',
+          background: 'rgba(139, 92, 246, 0.1)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <Wand2 style={{ width: '16px', height: '16px', color: '#8b5cf6' }} />
         </div>
-        <h2 className="text-sm font-semibold text-white">Prompt de Amplificación</h2>
+        <h2 style={{ fontSize: '14px', fontWeight: 600, color: 'white' }}>Prompt de Amplificación</h2>
       </div>
 
-      <div className="space-y-4">
-        {/* Idea Input */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <div>
-          <label className="label" htmlFor="idea-input">Tu idea</label>
-          <div className="relative">
+          <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#94a3b8', marginBottom: '6px' }}>
+            Tu idea
+          </label>
+          <div style={{ position: 'relative' }}>
             <textarea
-              id="idea-input"
-              className="input-field resize-none pr-14"
-              rows={4}
+              style={{
+                width: '100%',
+                padding: '12px 14px',
+                background: 'rgba(2, 6, 23, 0.8)',
+                border: '1px solid #1e293b',
+                borderRadius: '8px',
+                color: '#f8fafc',
+                fontSize: '14px',
+                lineHeight: 1.5,
+                resize: 'none',
+                minHeight: '80px'
+              }}
+              rows={3}
               placeholder="Ej: promoción de perfumes 2x800 pesos"
               value={idea}
               onChange={(e) => setIdea(e.target.value)}
               maxLength={500}
             />
-            <span className="absolute bottom-3 right-3 text-tertiary">{idea.length}/500</span>
+            <span style={{
+              position: 'absolute',
+              bottom: '8px',
+              right: '12px',
+              fontSize: '11px',
+              color: '#475569'
+            }}>
+              {idea.length}/500
+            </span>
           </div>
         </div>
 
-        {/* Style Selector */}
         <div>
-          <label className="label" htmlFor="style-select">Estilo</label>
+          <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: '#94a3b8', marginBottom: '6px' }}>
+            Estilo
+          </label>
           <select
-            id="style-select"
-            className="input-field"
+            style={{
+              width: '100%',
+              padding: '10px 12px',
+              background: 'rgba(2, 6, 23, 0.8)',
+              border: '1px solid #1e293b',
+              borderRadius: '8px',
+              color: '#f8fafc',
+              fontSize: '14px'
+            }}
             value={style}
             onChange={(e) => setStyle(e.target.value)}
           >
@@ -82,40 +122,71 @@ export default function AmplifyPanel({ onResult, onLoading, loading }: AmplifyPa
           </select>
         </div>
 
-        {/* Amplify Button */}
         <button
           onClick={handleAmplify}
           disabled={loading || !idea.trim()}
-          className="btn-primary"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            width: '100%',
+            padding: '12px 20px',
+            background: loading || !idea.trim() ? '#374151' : 'linear-gradient(135deg, #7c3aed, #6366f1)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            fontSize: '14px',
+            fontWeight: 500,
+            cursor: loading || !idea.trim() ? 'not-allowed' : 'pointer',
+            transition: 'all 0.15s ease'
+          }}
         >
           {loading ? (
             <>
-              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <div style={{
+                width: '16px',
+                height: '16px',
+                border: '2px solid rgba(255,255,255,0.3)',
+                borderTopColor: 'white',
+                borderRadius: '50%',
+                animation: 'spin 1s linear infinite'
+              }} />
               Amplificando...
             </>
           ) : (
             <>
-              <Sparkles className="w-4 h-4" />
+              <Sparkles style={{ width: '16px', height: '16px' }} />
               Amplificar Idea
             </>
           )}
         </button>
       </div>
 
-      <div className="divider" />
+      <div style={{ height: '1px', background: '#1e293b', margin: '20px 0' }} />
 
-      {/* Examples */}
       <div>
-        <p className="text-tertiary mb-2">Sugerencias rápidas</p>
-        <div className="flex flex-wrap gap-2">
+        <p style={{ fontSize: '12px', color: '#475569', marginBottom: '8px' }}>Sugerencias rápidas</p>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
           {examples.map((ex, i) => (
             <button
               key={i}
-              onClick={() => setIdea(ex.text)}
-              className="chip"
+              onClick={() => setIdea(ex)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 12px',
+                background: 'rgba(30, 41, 59, 0.4)',
+                border: '1px solid #1e293b',
+                borderRadius: '6px',
+                fontSize: '12px',
+                color: '#94a3b8',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
+              }}
             >
-              <span>{ex.icon}</span>
-              {ex.text.length > 24 ? ex.text.slice(0, 24) + '...' : ex.text}
+              {ex.length > 24 ? ex.slice(0, 24) + '...' : ex}
             </button>
           ))}
         </div>

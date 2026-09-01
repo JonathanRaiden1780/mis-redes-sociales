@@ -26,48 +26,110 @@ export default function PlatformPreview({ platform, prompt, format, hashtags, co
   }
 
   return (
-    <div className="bg-slate-900/40 border border-slate-800/60 rounded-xl p-4">
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2.5">
-          <div 
-            className="w-9 h-9 rounded-lg flex items-center justify-center text-lg"
-            style={{ background: color + '15', border: '1px solid ' + color + '30' }}
-          >
+    <div style={{
+      background: 'rgba(15, 23, 42, 0.4)',
+      border: '1px solid #1e293b',
+      borderRadius: '12px',
+      padding: '16px'
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{
+            width: '36px',
+            height: '36px',
+            borderRadius: '8px',
+            background: color + '15',
+            border: '1px solid ' + color + '30',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '18px'
+          }}>
             {platform.icon}
           </div>
           <div>
-            <span className="text-sm font-medium text-white">{platform.name}</span>
-            <p className="text-tertiary text-xs">{formatLabels[format] || format}</p>
+            <span style={{ fontSize: '13px', fontWeight: 600, color: 'white' }}>{platform.name}</span>
+            <p style={{ fontSize: '11px', color: '#475569' }}>{formatLabels[format] || format}</p>
           </div>
         </div>
-        <span className="text-tertiary font-mono text-xs">{format}</span>
+        <span style={{ fontSize: '11px', color: '#475569', fontFamily: 'monospace' }}>{format}</span>
       </div>
       
-      <p className="text-sm text-slate-400 leading-relaxed mb-3 line-clamp-3">
-        {prompt.slice(0, 160)}...
+      <p style={{ fontSize: '12px', color: '#94a3b8', lineHeight: 1.5, marginBottom: '12px' }}>
+        {prompt.slice(0, 140)}...
       </p>
       
-      <div className="flex flex-wrap gap-1.5 mb-3">
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '12px' }}>
         {hashtags.slice(0, 3).map((tag, i) => (
-          <span key={i} className="badge bg-blue-500/10 text-blue-400">
+          <span key={i} style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            padding: '2px 8px',
+            borderRadius: '4px',
+            fontSize: '11px',
+            fontWeight: 500,
+            background: 'rgba(59, 130, 246, 0.1)',
+            color: '#60a5fa'
+          }}>
             {tag}
           </span>
         ))}
         {hashtags.length > 3 && (
-          <span className="badge bg-slate-800 text-slate-500">+{hashtags.length - 3}</span>
+          <span style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            padding: '2px 8px',
+            borderRadius: '4px',
+            fontSize: '11px',
+            fontWeight: 500,
+            background: '#1e293b',
+            color: '#52525b'
+          }}>
+            +{hashtags.length - 3}
+          </span>
         )}
       </div>
 
-      <div className="flex gap-2 pt-3 border-t border-slate-800">
+      <div style={{ display: 'flex', gap: '8px', paddingTop: '12px', borderTop: '1px solid #1e293b' }}>
         <button
           onClick={copyToClipboard}
-          className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium text-slate-500 hover:text-white hover:bg-white/5 transition-colors"
+          style={{
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '6px',
+            padding: '8px',
+            borderRadius: '6px',
+            fontSize: '12px',
+            fontWeight: 500,
+            color: '#71717a',
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+            transition: 'all 0.15s ease'
+          }}
         >
-          {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+          {copied ? <Check style={{ width: '14px', height: '14px' }} /> : <Copy style={{ width: '14px', height: '14px' }} />}
           {copied ? 'Copiado' : 'Copiar'}
         </button>
-        <button className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium text-slate-500 hover:text-white hover:bg-white/5 transition-colors">
-          <Edit3 className="w-3.5 h-3.5" />
+        <button style={{
+          flex: 1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '6px',
+          padding: '8px',
+          borderRadius: '6px',
+          fontSize: '12px',
+          fontWeight: 500,
+          color: '#71717a',
+          background: 'transparent',
+          border: 'none',
+          cursor: 'pointer',
+          transition: 'all 0.15s ease'
+        }}>
+          <Edit3 style={{ width: '14px', height: '14px' }} />
           Editar
         </button>
       </div>

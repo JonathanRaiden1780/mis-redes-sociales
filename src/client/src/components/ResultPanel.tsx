@@ -16,75 +16,114 @@ export default function ResultPanel({ result }: ResultPanelProps) {
   }
 
   return (
-    <div className="card">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-purple-400" />
-          <h2 className="text-sm font-semibold text-white">Resultado</h2>
+    <div style={{
+      background: 'rgba(15, 23, 42, 0.5)',
+      border: '1px solid #1e293b',
+      borderRadius: '12px',
+      padding: '24px'
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Sparkles style={{ width: '16px', height: '16px', color: '#8b5cf6' }} />
+          <h2 style={{ fontSize: '14px', fontWeight: 600, color: 'white' }}>Resultado</h2>
         </div>
-        <span className="badge bg-green-500/10 text-green-400">Generado</span>
+        <span style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          padding: '2px 8px',
+          borderRadius: '4px',
+          fontSize: '11px',
+          fontWeight: 500,
+          background: 'rgba(16, 185, 129, 0.1)',
+          color: '#34d399'
+        }}>
+          Generado
+        </span>
       </div>
       
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-        <div className="bg-slate-800/50 p-3 rounded-lg">
-          <p className="text-tertiary mb-0.5">Venta</p>
-          <p className="text-sm font-medium text-white">{result.sale_type}</p>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '16px' }}>
+        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '8px' }}>
+          <p style={{ fontSize: '11px', color: '#475569', marginBottom: '2px' }}>Venta</p>
+          <p style={{ fontSize: '13px', fontWeight: 500, color: 'white' }}>{result.sale_type}</p>
         </div>
-        <div className="bg-slate-800/50 p-3 rounded-lg">
-          <p className="text-tertiary mb-0.5">Emoción</p>
-          <p className="text-sm font-medium text-white">{result.emotion}</p>
+        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '8px' }}>
+          <p style={{ fontSize: '11px', color: '#475569', marginBottom: '2px' }}>Emoción</p>
+          <p style={{ fontSize: '13px', fontWeight: 500, color: 'white' }}>{result.emotion}</p>
         </div>
-        <div className="bg-slate-800/50 p-3 rounded-lg">
-          <p className="text-tertiary mb-0.5">Tono</p>
-          <p className="text-sm font-medium text-white">{result.tone}</p>
+        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '8px' }}>
+          <p style={{ fontSize: '11px', color: '#475569', marginBottom: '2px' }}>Tono</p>
+          <p style={{ fontSize: '13px', fontWeight: 500, color: 'white' }}>{result.tone}</p>
         </div>
-        <div className="bg-slate-800/50 p-3 rounded-lg">
-          <p className="text-tertiary mb-0.5">Estilo</p>
-          <p className="text-sm font-medium text-white">{result.style}</p>
+        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '8px' }}>
+          <p style={{ fontSize: '11px', color: '#475569', marginBottom: '2px' }}>Estilo</p>
+          <p style={{ fontSize: '13px', fontWeight: 500, color: 'white' }}>{result.style}</p>
         </div>
       </div>
 
-      <div className="space-y-3">
-        <div className="bg-slate-800/50 p-3 rounded-lg">
-          <p className="text-tertiary mb-1">Texto Overlay</p>
-          <p className="text-lg font-bold text-white">{result.text_overlay}</p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '8px' }}>
+          <p style={{ fontSize: '11px', color: '#475569', marginBottom: '4px' }}>Texto Overlay</p>
+          <p style={{ fontSize: '18px', fontWeight: 700, color: 'white' }}>{result.text_overlay}</p>
         </div>
         
-        <div className="bg-slate-800/50 p-3 rounded-lg">
-          <p className="text-tertiary mb-1">Call to Action</p>
-          <p className="text-sm text-white">{result.cta}</p>
+        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '8px' }}>
+          <p style={{ fontSize: '11px', color: '#475569', marginBottom: '4px' }}>Call to Action</p>
+          <p style={{ fontSize: '14px', color: 'white' }}>{result.cta}</p>
         </div>
 
-        <div className="bg-slate-800/50 p-3 rounded-lg">
-          <p className="text-tertiary mb-2">Triggers Psicológicos</p>
-          <div className="flex gap-1.5 flex-wrap">
+        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '8px' }}>
+          <p style={{ fontSize: '11px', color: '#475569', marginBottom: '8px' }}>Triggers Psicológicos</p>
+          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
             {result.psychological_triggers.map((t, i) => (
-              <span key={i} className="badge bg-orange-500/10 text-orange-400">
+              <span key={i} style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                padding: '2px 8px',
+                borderRadius: '4px',
+                fontSize: '11px',
+                fontWeight: 500,
+                background: 'rgba(251, 146, 60, 0.1)',
+                color: '#fb923c'
+              }}>
                 {t}
               </span>
             ))}
           </div>
         </div>
 
-        <div className="bg-slate-800/50 p-3 rounded-lg">
-          <p className="text-tertiary mb-2">Paleta de Colores</p>
-          <div className="flex gap-1.5">
+        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '8px' }}>
+          <p style={{ fontSize: '11px', color: '#475569', marginBottom: '8px' }}>Paleta de Colores</p>
+          <div style={{ display: 'flex', gap: '6px' }}>
             {result.color_palette.map((c, i) => (
               <div
                 key={i}
-                className="w-6 h-6 rounded border border-slate-700"
-                style={{ backgroundColor: c }}
+                style={{
+                  width: '24px',
+                  height: '24px',
+                  borderRadius: '4px',
+                  background: c,
+                  border: '1px solid rgba(255,255,255,0.1)'
+                }}
                 title={c}
               />
             ))}
           </div>
         </div>
 
-        <div className="bg-slate-800/50 p-3 rounded-lg">
-          <p className="text-tertiary mb-2">Hashtags</p>
-          <div className="flex gap-1.5 flex-wrap">
+        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '8px' }}>
+          <p style={{ fontSize: '11px', color: '#475569', marginBottom: '8px' }}>Hashtags</p>
+          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
             {result.hashtags.map((h, i) => (
-              <span key={i} className="badge bg-blue-500/10 text-blue-400">
+              <span key={i} style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                padding: '2px 8px',
+                borderRadius: '4px',
+                fontSize: '11px',
+                fontWeight: 500,
+                background: 'rgba(59, 130, 246, 0.1)',
+                color: '#60a5fa'
+              }}>
                 {h}
               </span>
             ))}
@@ -92,18 +131,36 @@ export default function ResultPanel({ result }: ResultPanelProps) {
         </div>
 
         {result.diffusion_message && (
-          <div className="pt-3 border-t border-slate-800">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-tertiary">Difusión WhatsApp</p>
+          <div style={{ paddingTop: '12px', borderTop: '1px solid #1e293b' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+              <p style={{ fontSize: '11px', color: '#475569' }}>Difusión WhatsApp</p>
               <button
                 onClick={() => copyToClipboard(result.diffusion_message, 'wa')}
-                className="flex items-center gap-1 text-xs text-slate-500 hover:text-white transition-colors"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  fontSize: '11px',
+                  color: '#71717a',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer'
+                }}
               >
-                {copied === 'wa' ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                {copied === 'wa' ? <Check style={{ width: '12px', height: '12px' }} /> : <Copy style={{ width: '12px', height: '12px' }} />}
                 {copied === 'wa' ? 'Copiado' : 'Copiar'}
               </button>
             </div>
-            <pre className="text-xs text-slate-400 whitespace-pre-wrap font-mono bg-slate-950 p-3 rounded-lg border border-slate-800">
+            <pre style={{
+              fontSize: '12px',
+              color: '#a1a1aa',
+              whiteSpace: 'pre-wrap',
+              fontFamily: 'monospace',
+              background: '#09090b',
+              padding: '12px',
+              borderRadius: '8px',
+              border: '1px solid #1e293b'
+            }}>
               {result.diffusion_message}
             </pre>
           </div>

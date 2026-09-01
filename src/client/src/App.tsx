@@ -1,63 +1,192 @@
 import { useState } from 'react'
-import { Sparkles } from 'lucide-react'
-import Header from './components/Header'
+import { Sparkles, Zap, LayoutDashboard, History, Settings } from 'lucide-react'
 import AmplifyPanel from './components/AmplifyPanel'
 import ResultPanel from './components/ResultPanel'
 import PlatformGrid from './components/PlatformGrid'
 import type { AmplifyResponse } from './types'
+
+function Header() {
+  return (
+    <header style={{
+      position: 'sticky',
+      top: 0,
+      zIndex: 50,
+      background: 'rgba(15, 23, 42, 0.9)',
+      backdropFilter: 'blur(8px)',
+      borderBottom: '1px solid #1e293b'
+    }}>
+      <div style={{
+        maxWidth: '1152px',
+        margin: '0 auto',
+        padding: '0 24px',
+        height: '56px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+          <a href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+            <div style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '8px',
+              background: 'linear-gradient(135deg, #7c3aed, #6366f1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <Zap style={{ width: '16px', height: '16px', color: 'white' }} />
+            </div>
+            <span style={{ fontSize: '14px', fontWeight: 600, color: 'white' }}>Mis Redes</span>
+            <span style={{ fontSize: '11px', color: '#64748b' }}>v0.1</span>
+          </a>
+          <nav style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <a href="#" style={{
+              padding: '6px 12px',
+              borderRadius: '6px',
+              fontSize: '13px',
+              fontWeight: 500,
+              color: 'white',
+              background: 'rgba(255,255,255,0.05)',
+              textDecoration: 'none'
+            }}>
+              <LayoutDashboard style={{ width: '14px', height: '14px', marginRight: '6px', display: 'inline' }} />
+              Dashboard
+            </a>
+            <a href="#" style={{
+              padding: '6px 12px',
+              borderRadius: '6px',
+              fontSize: '13px',
+              fontWeight: 500,
+              color: '#94a3b8',
+              textDecoration: 'none'
+            }}>
+              <History style={{ width: '14px', height: '14px', marginRight: '6px', display: 'inline' }} />
+              Historial
+            </a>
+            <a href="#" style={{
+              padding: '6px 12px',
+              borderRadius: '6px',
+              fontSize: '13px',
+              fontWeight: 500,
+              color: '#94a3b8',
+              textDecoration: 'none'
+            }}>
+              <Settings style={{ width: '14px', height: '14px', marginRight: '6px', display: 'inline' }} />
+              Configuración
+            </a>
+          </nav>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '4px 10px',
+            borderRadius: '9999px',
+            background: 'rgba(16, 185, 129, 0.1)',
+            border: '1px solid rgba(16, 185, 129, 0.2)'
+          }}>
+            <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981' }} />
+            <span style={{ fontSize: '11px', fontWeight: 500, color: '#34d399' }}>Activo</span>
+          </div>
+          <button style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '6px 14px',
+            borderRadius: '6px',
+            background: 'linear-gradient(135deg, #7c3aed, #6366f1)',
+            color: 'white',
+            border: 'none',
+            fontSize: '13px',
+            fontWeight: 500,
+            cursor: 'pointer'
+          }}>
+            <Sparkles style={{ width: '14px', height: '14px' }} />
+            Nuevo
+          </button>
+        </div>
+      </div>
+    </header>
+  )
+}
 
 export default function App() {
   const [result, setResult] = useState<AmplifyResponse | null>(null)
   const [loading, setLoading] = useState(false)
 
   return (
-    <div className="min-h-screen bg-slate-950">
-      {/* Premium Header */}
+    <div style={{ minHeight: '100vh', background: '#0f172a', color: '#e2e8f0' }}>
       <Header />
-
-      {/* Hero Section */}
-      <section className="max-w-6xl mx-auto px-6 pt-12 pb-8">
-        <div className="max-w-2xl">
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3 tracking-tight">
-            Amplificador de Contenido
-          </h1>
-          <p className="text-slate-400 text-base leading-relaxed">
-            Transforma una idea simple en publicaciones optimizadas para todas tus redes en segundos.
-          </p>
-        </div>
-      </section>
-
-      {/* Main Grid */}
-      <main className="max-w-6xl mx-auto px-6 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left Column - Form (5 cols) */}
-          <div className="lg:col-span-5">
-            <AmplifyPanel 
-              onResult={setResult} 
-              onLoading={setLoading}
-              loading={loading}
-            />
+      <main style={{ maxWidth: '1152px', margin: '0 auto', padding: '32px 24px' }}>
+        <h1 style={{ fontSize: '24px', fontWeight: 700, color: 'white', marginBottom: '8px' }}>
+          Amplificador de Contenido
+        </h1>
+        <p style={{ fontSize: '14px', color: '#64748b', marginBottom: '32px', maxWidth: '448px' }}>
+          Transforma una idea simple en publicaciones optimizadas para todas tus redes en segundos.
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '32px' }}>
+          <div>
+            <AmplifyPanel onResult={setResult} onLoading={setLoading} loading={loading} />
           </div>
-
-          {/* Right Column - Results (7 cols) */}
-          <div className="lg:col-span-7">
+          <div>
             {loading ? (
-              <div className="card min-h-[400px] flex flex-col items-center justify-center" role="status" aria-label="Cargando">
-                <div className="w-12 h-12 border-2 border-violet-500/30 border-t-violet-500 rounded-full animate-spin mb-4" />
-                <span className="text-sm text-slate-400">Amplificando tu idea...</span>
+              <div style={{
+                background: 'rgba(15, 23, 42, 0.5)',
+                border: '1px solid #1e293b',
+                borderRadius: '12px',
+                padding: '48px',
+                minHeight: '400px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  border: '3px solid rgba(139, 92, 246, 0.3)',
+                  borderTopColor: '#8b5cf6',
+                  borderRadius: '50%',
+                  animation: 'spin 1s linear infinite'
+                }} />
+                <span style={{ marginTop: '16px', color: '#94a3b8' }}>Amplificando tu idea...</span>
               </div>
             ) : result ? (
-              <div className="space-y-6 animate-fade">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                 <ResultPanel result={result} />
                 <PlatformGrid result={result} />
               </div>
             ) : (
-              <div className="card min-h-[400px] flex flex-col items-center justify-center text-center">
-                <div className="w-16 h-16 rounded-2xl bg-violet-500/10 flex items-center justify-center mb-4">
-                  <Sparkles className="w-8 h-8 text-violet-400" />
+              <div style={{
+                background: 'rgba(15, 23, 42, 0.5)',
+                border: '1px solid #1e293b',
+                borderRadius: '12px',
+                padding: '48px',
+                minHeight: '400px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                textAlign: 'center'
+              }}>
+                <div style={{
+                  width: '56px',
+                  height: '56px',
+                  borderRadius: '16px',
+                  background: 'rgba(139, 92, 246, 0.1)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '16px'
+                }}>
+                  <Sparkles style={{ width: '24px', height: '24px', color: '#8b5cf6' }} />
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">Sin resultado aún</h3>
-                <p className="text-sm text-slate-500 max-w-sm">
+                <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'white', marginBottom: '4px' }}>
+                  Sin resultado aún
+                </h3>
+                <p style={{ fontSize: '13px', color: '#64748b', maxWidth: '280px' }}>
                   Introduce tu idea de promoción y presiona Amplificar para generar contenido optimizado.
                 </p>
               </div>
