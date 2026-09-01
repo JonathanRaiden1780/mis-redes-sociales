@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Sparkles, Zap } from 'lucide-react'
+import { Sparkles } from 'lucide-react'
+import Header from './components/Header'
 import AmplifyPanel from './components/AmplifyPanel'
 import ResultPanel from './components/ResultPanel'
 import PlatformGrid from './components/PlatformGrid'
@@ -11,33 +12,23 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-950">
-      {/* Navbar */}
-      <header className="border-b border-slate-800">
-        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
-              <Zap className="w-4 h-4 text-white" />
-            </div>
-            <span className="text-sm font-semibold text-white">Mis Redes Sociales</span>
-            <span className="badge bg-purple-500/10 text-purple-400">v0.1</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-green-500" />
-            <span className="text-xs text-slate-500">Activo</span>
-          </div>
-        </div>
-      </header>
+      {/* Premium Header */}
+      <Header />
 
-      {/* Hero Header */}
-      <section className="max-w-6xl mx-auto px-6 pt-10 pb-6">
-        <h1 className="text-2xl font-bold text-white mb-2">Amplificador de Contenido</h1>
-        <p className="text-slate-400 text-sm max-w-lg">
-          Transforma una idea simple en publicaciones optimizadas para todas tus redes en segundos.
-        </p>
+      {/* Hero Section */}
+      <section className="max-w-6xl mx-auto px-6 pt-12 pb-8">
+        <div className="max-w-2xl">
+          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3 tracking-tight">
+            Amplificador de Contenido
+          </h1>
+          <p className="text-slate-400 text-base leading-relaxed">
+            Transforma una idea simple en publicaciones optimizadas para todas tus redes en segundos.
+          </p>
+        </div>
       </section>
 
       {/* Main Grid */}
-      <main className="max-w-6xl mx-auto px-6 pb-12">
+      <main className="max-w-6xl mx-auto px-6 pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Left Column - Form (5 cols) */}
           <div className="lg:col-span-5">
@@ -52,8 +43,8 @@ export default function App() {
           <div className="lg:col-span-7">
             {loading ? (
               <div className="card min-h-[400px] flex flex-col items-center justify-center" role="status" aria-label="Cargando">
-                <div className="w-10 h-10 border-2 border-purple-500/30 border-t-purple-500 rounded-full animate-spin mb-3" />
-                <span className="text-sm text-slate-400">Amplificando...</span>
+                <div className="w-12 h-12 border-2 border-violet-500/30 border-t-violet-500 rounded-full animate-spin mb-4" />
+                <span className="text-sm text-slate-400">Amplificando tu idea...</span>
               </div>
             ) : result ? (
               <div className="space-y-6 animate-fade">
@@ -62,11 +53,11 @@ export default function App() {
               </div>
             ) : (
               <div className="card min-h-[400px] flex flex-col items-center justify-center text-center">
-                <div className="w-14 h-14 rounded-full bg-purple-500/10 flex items-center justify-center mb-4">
-                  <Sparkles className="w-7 h-7 text-purple-400" />
+                <div className="w-16 h-16 rounded-2xl bg-violet-500/10 flex items-center justify-center mb-4">
+                  <Sparkles className="w-8 h-8 text-violet-400" />
                 </div>
-                <h3 className="text-base font-semibold text-white mb-1">Sin resultado aún</h3>
-                <p className="text-sm text-slate-500 max-w-xs">
+                <h3 className="text-lg font-semibold text-white mb-2">Sin resultado aún</h3>
+                <p className="text-sm text-slate-500 max-w-sm">
                   Introduce tu idea de promoción y presiona Amplificar para generar contenido optimizado.
                 </p>
               </div>
