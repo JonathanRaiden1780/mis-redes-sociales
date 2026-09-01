@@ -1,0 +1,7 @@
+category: aiep-agent-skills
+description: Breaks work into ordered tasks. Use when you have a spec or clear requirements
+  and need to break work into implementable tasks. Use when a task feels too large
+  to start, when you need to estimate scope, or when parallel work is possible.
+imported_at: '2026-09-01T00:58:42.461289+00:00'
+name: planning-and-task-breakdown
+source: hermes

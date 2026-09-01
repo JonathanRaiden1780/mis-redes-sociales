@@ -1,0 +1,5 @@
+category: media
+description: Search/download GIFs from Tenor via curl + jq.
+imported_at: '2026-09-01T00:58:42.493107+00:00'
+name: gif-search
+source: hermes

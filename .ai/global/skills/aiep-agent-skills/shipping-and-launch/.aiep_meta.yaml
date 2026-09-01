@@ -1,0 +1,7 @@
+category: aiep-agent-skills
+description: Prepares production launches. Use when preparing to deploy to production.
+  Use when you need a pre-launch checklist, when setting up monitoring, when planning
+  a staged rollout, or when you need a rollback strategy.
+imported_at: '2026-09-01T00:58:42.462007+00:00'
+name: shipping-and-launch
+source: hermes

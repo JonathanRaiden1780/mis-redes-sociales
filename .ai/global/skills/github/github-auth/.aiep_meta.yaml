@@ -1,0 +1,5 @@
+category: github
+description: 'GitHub auth setup: HTTPS tokens, SSH keys, gh CLI login.'
+imported_at: '2026-09-01T00:58:42.488015+00:00'
+name: github-auth
+source: hermes

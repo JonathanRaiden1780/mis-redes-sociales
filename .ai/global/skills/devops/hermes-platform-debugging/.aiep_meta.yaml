@@ -1,0 +1,5 @@
+category: devops
+description: Debug Hermes platform config — lives in ~/.hermes/
+imported_at: '2026-09-01T00:58:42.485018+00:00'
+name: hermes-platform-debugging
+source: hermes

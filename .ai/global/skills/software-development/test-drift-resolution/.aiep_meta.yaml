@@ -1,0 +1,5 @@
+category: software-development
+description: Resolve test failures from test-implementation mismatch.
+imported_at: '2026-09-01T00:58:42.532155+00:00'
+name: test-drift-resolution
+source: hermes

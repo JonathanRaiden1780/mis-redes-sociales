@@ -1,0 +1,7 @@
+category: aiep-agent-skills
+description: Drives development with tests. Use when implementing any logic, fixing
+  any bug, or changing any behavior. Use when you need to prove that code works, when
+  a bug report arrives, or when you're about to modify existing functionality.
+imported_at: '2026-09-01T00:58:42.463043+00:00'
+name: test-driven-development
+source: hermes

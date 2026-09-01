@@ -1,0 +1,5 @@
+category: devops
+description: Set up CI/CD security scanning and quality gates for repos.
+imported_at: '2026-09-01T00:58:42.484716+00:00'
+name: ci-cd-security-gate
+source: hermes

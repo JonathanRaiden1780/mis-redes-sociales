@@ -1,0 +1,7 @@
+category: aiep-agent-skills
+description: Grounds every implementation decision in official documentation. Use
+  when you want authoritative, source-cited code free from outdated patterns. Use
+  when building with any framework or library where correctness matters.
+imported_at: '2026-09-01T00:58:42.462301+00:00'
+name: source-driven-development
+source: hermes

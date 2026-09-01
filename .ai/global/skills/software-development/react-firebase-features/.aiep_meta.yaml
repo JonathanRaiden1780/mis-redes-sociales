@@ -1,0 +1,9 @@
+category: software-development
+description: Use when building a React+Firebase feature module. Handles cache-first
+  Firestore hooks, branch integration, multi-mode UI flows (basic/MK profile selection),
+  lifecycle stage promotion, cross-tab action consistency, settings configuration
+  (statuses, thresholds, strategies), WhatsApp messenger abstraction, and NAS Gateway
+  automation compatibility.
+imported_at: '2026-09-01T00:58:42.524544+00:00'
+name: react-firebase-features
+source: hermes

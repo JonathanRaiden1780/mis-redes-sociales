@@ -1,0 +1,7 @@
+category: aiep-agent-skills
+description: Optimizes agent context setup. Use when starting a new session, when
+  agent output quality degrades, when switching between tasks, or when you need to
+  configure rules files and context for a project.
+imported_at: '2026-09-01T00:58:42.456924+00:00'
+name: context-engineering
+source: hermes

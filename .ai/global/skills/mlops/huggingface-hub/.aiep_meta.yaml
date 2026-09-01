@@ -1,0 +1,5 @@
+category: mlops
+description: 'HuggingFace hf CLI: search/download/upload models, datasets.'
+imported_at: '2026-09-01T00:58:42.494814+00:00'
+name: huggingface-hub
+source: hermes

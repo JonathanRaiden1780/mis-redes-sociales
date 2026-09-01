@@ -1,0 +1,5 @@
+category: github
+description: Create, triage, label, assign GitHub issues via gh or REST.
+imported_at: '2026-09-01T00:58:42.489417+00:00'
+name: github-issues
+source: hermes

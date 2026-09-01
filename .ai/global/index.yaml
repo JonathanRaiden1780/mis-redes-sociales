@@ -1,0 +1,18 @@
+entries:
+  clean-architecture:
+    path: .ai/global/patterns/clean-architecture.yaml
+    type: pattern
+    updated_at: '2026-09-01T00:58:38.640385+00:00'
+  coding-standards:
+    path: .ai/global/rules/coding-standards.md
+    type: rule
+    updated_at: '2026-09-01T00:58:38.637601+00:00'
+  git-workflow:
+    path: .ai/global/rules/git-workflow.md
+    type: rule
+    updated_at: '2026-09-01T00:58:38.638628+00:00'
+  tdd:
+    path: .ai/global/patterns/tdd.yaml
+    type: pattern
+    updated_at: '2026-09-01T00:58:38.642324+00:00'
+version: 1.0.0

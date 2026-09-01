@@ -1,0 +1,5 @@
+category: github
+description: 'Review PRs: diffs, inline comments via gh or REST.'
+imported_at: '2026-09-01T00:58:42.488710+00:00'
+name: github-code-review
+source: hermes

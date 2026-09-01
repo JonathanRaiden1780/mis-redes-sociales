@@ -1,0 +1,5 @@
+category: software-development
+description: 'Debug Python: pdb REPL + debugpy remote (DAP).'
+imported_at: '2026-09-01T00:58:42.523228+00:00'
+name: python-debugpy
+source: hermes

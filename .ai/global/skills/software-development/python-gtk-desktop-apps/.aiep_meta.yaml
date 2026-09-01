@@ -1,0 +1,5 @@
+category: software-development
+description: Fix PyGObject GTK4/libadwaita apps and test them.
+imported_at: '2026-09-01T00:58:42.523986+00:00'
+name: python-gtk-desktop-apps
+source: hermes

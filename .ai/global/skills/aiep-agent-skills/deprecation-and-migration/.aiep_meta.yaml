@@ -1,0 +1,7 @@
+category: aiep-agent-skills
+description: Manages deprecation and migration. Use when removing old systems, APIs,
+  or features. Use when migrating users from one implementation to another. Use when
+  deciding whether to maintain or sunset existing code.
+imported_at: '2026-09-01T00:58:42.457522+00:00'
+name: deprecation-and-migration
+source: hermes

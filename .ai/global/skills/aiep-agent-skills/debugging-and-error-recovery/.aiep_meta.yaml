@@ -1,0 +1,8 @@
+category: aiep-agent-skills
+description: Guides systematic root-cause debugging. Use when tests fail, builds break,
+  behavior doesn't match expectations, or you encounter any unexpected error. Use
+  when you need a systematic approach to finding and fixing the root cause rather
+  than guessing.
+imported_at: '2026-09-01T00:58:42.457238+00:00'
+name: debugging-and-error-recovery
+source: hermes

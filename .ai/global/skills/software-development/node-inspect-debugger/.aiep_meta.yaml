@@ -1,0 +1,5 @@
+category: software-development
+description: Debug Node.js via --inspect + Chrome DevTools Protocol CLI.
+imported_at: '2026-09-01T00:58:42.520863+00:00'
+name: node-inspect-debugger
+source: hermes

@@ -1,0 +1,5 @@
+category: social-media
+description: 'Hermes Telegram gateway: token, allowlist, sends, conflicts.'
+imported_at: '2026-09-01T00:58:42.511941+00:00'
+name: telegram-gateway
+source: hermes

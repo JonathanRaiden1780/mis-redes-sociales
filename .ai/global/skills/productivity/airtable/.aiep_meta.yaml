@@ -1,0 +1,5 @@
+category: productivity
+description: Airtable REST API via curl. Records CRUD, filters, upserts.
+imported_at: '2026-09-01T00:58:42.496180+00:00'
+name: airtable
+source: hermes
