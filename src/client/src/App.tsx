@@ -4,6 +4,7 @@ import AmplifyPanel from './components/AmplifyPanel'
 import ResultPanel from './components/ResultPanel'
 import PlatformGrid from './components/PlatformGrid'
 import ManualDiffusion from './components/ManualDiffusion'
+import WhatsAppPanel from './components/WhatsAppPanel'
 import type { AmplifyResponse } from './types'
 
 interface Campaign {
@@ -320,6 +321,7 @@ export default function App() {
                 <ResultPanel result={result} />
                 <PlatformGrid result={result} campaignId={currentCampaignId || 0} />
                 <ManualDiffusion result={result} />
+                <WhatsAppPanel campaignId={currentCampaignId || 0} />
               </div>
             ) : (
               <div style={{

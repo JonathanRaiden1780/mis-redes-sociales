@@ -9,6 +9,7 @@ from src.server.database import init_db
 from src.server.api.campaigns import router as campaigns_router
 from src.server.api.generate import router as generate_router
 from src.server.api.diffuse import router as diffuse_router
+from src.server.api.whatsapp import router as whatsapp_router
 
 # Initialize database
 init_db()
@@ -28,6 +29,7 @@ app.add_middleware(
 app.include_router(campaigns_router)
 app.include_router(generate_router)
 app.include_router(diffuse_router)
+app.include_router(whatsapp_router)
 
 
 class AmplifyRequest(BaseModel):
