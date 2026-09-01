@@ -10,44 +10,36 @@ export default function App() {
   const [loading, setLoading] = useState(false)
 
   return (
-    <div className="min-h-screen bg-[#0c0c11]">
-      {/* Header */}
-      <header className="border-b border-[#27272a] sticky top-0 z-50 glass-strong">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+    <div className="min-h-screen bg-slate-950">
+      {/* Navbar */}
+      <header className="border-b border-slate-800">
+        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-600 to-purple-500 flex items-center justify-center shadow-lg shadow-violet-500/20">
-              <Zap className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
+              <Zap className="w-4 h-4 text-white" />
             </div>
-            <div>
-              <h1 className="text-base font-semibold text-white">Mis Redes Sociales</h1>
-              <p className="text-xs text-[#71717a]">Amplificador de Contenido IA</p>
-            </div>
+            <span className="text-sm font-semibold text-white">Mis Redes Sociales</span>
+            <span className="badge bg-purple-500/10 text-purple-400">v0.1</span>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="badge bg-violet-500/10 text-violet-400">v0.1</span>
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse-subtle" />
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-green-500" />
+            <span className="text-xs text-slate-500">Activo</span>
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="max-w-6xl mx-auto px-6 pt-12 pb-8 text-center">
-        <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">
-          Convierte ideas en contenido{' '}
-          <span className="bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">
-            viral
-          </span>
-        </h2>
-        <p className="text-[#71717a] max-w-xl mx-auto text-base">
-          Amplifica tus promociones con IA para todas las plataformas. 
-          Genera prompts optimizados en segundos.
+      {/* Hero Header */}
+      <section className="max-w-6xl mx-auto px-6 pt-10 pb-6">
+        <h1 className="text-2xl font-bold text-white mb-2">Amplificador de Contenido</h1>
+        <p className="text-slate-400 text-sm max-w-lg">
+          Transforma una idea simple en publicaciones optimizadas para todas tus redes en segundos.
         </p>
       </section>
 
-      {/* Main */}
-      <main className="max-w-6xl mx-auto px-6 pb-16">
+      {/* Main Grid */}
+      <main className="max-w-6xl mx-auto px-6 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left - Input */}
+          {/* Left Column - Form (5 cols) */}
           <div className="lg:col-span-5">
             <AmplifyPanel 
               onResult={setResult} 
@@ -56,13 +48,12 @@ export default function App() {
             />
           </div>
 
-          {/* Right - Results */}
+          {/* Right Column - Results (7 cols) */}
           <div className="lg:col-span-7">
             {loading ? (
-              <div className="surface p-12 flex flex-col items-center justify-center min-h-[400px]" role="status" aria-label="Cargando">
-                <div className="w-12 h-12 rounded-full border-2 border-violet-500/30 border-t-violet-500 animate-spin mb-4" />
-                <p className="text-[#a1a1aa] font-medium">Amplificando tu idea...</p>
-                <p className="text-tertiary mt-1">Generando prompts optimizados</p>
+              <div className="card min-h-[400px] flex flex-col items-center justify-center" role="status" aria-label="Cargando">
+                <div className="w-10 h-10 border-2 border-purple-500/30 border-t-purple-500 rounded-full animate-spin mb-3" />
+                <span className="text-sm text-slate-400">Amplificando...</span>
               </div>
             ) : result ? (
               <div className="space-y-6 animate-fade">
@@ -70,13 +61,13 @@ export default function App() {
                 <PlatformGrid result={result} />
               </div>
             ) : (
-              <div className="surface p-12 text-center min-h-[400px] flex flex-col items-center justify-center">
-                <div className="w-16 h-16 rounded-2xl bg-violet-500/10 flex items-center justify-center mb-4">
-                  <Sparkles className="w-8 h-8 text-violet-400" />
+              <div className="card min-h-[400px] flex flex-col items-center justify-center text-center">
+                <div className="w-14 h-14 rounded-full bg-purple-500/10 flex items-center justify-center mb-4">
+                  <Sparkles className="w-7 h-7 text-purple-400" />
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">Sin resultado aún</h3>
-                <p className="text-[#71717a] max-w-sm">
-                  Introduce tu idea de promoción y presiona Amplificar para generar contenido optimizado
+                <h3 className="text-base font-semibold text-white mb-1">Sin resultado aún</h3>
+                <p className="text-sm text-slate-500 max-w-xs">
+                  Introduce tu idea de promoción y presiona Amplificar para generar contenido optimizado.
                 </p>
               </div>
             )}

@@ -16,46 +16,46 @@ export default function ResultPanel({ result }: ResultPanelProps) {
   }
 
   return (
-    <div className="surface p-6">
-      <div className="flex items-center justify-between mb-5">
+    <div className="card">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-violet-400" />
-          <h2 className="text-base font-semibold text-white">Resultado</h2>
+          <Sparkles className="w-4 h-4 text-purple-400" />
+          <h2 className="text-sm font-semibold text-white">Resultado</h2>
         </div>
         <span className="badge bg-green-500/10 text-green-400">Generado</span>
       </div>
       
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
-        <div className="bg-white/5 p-3 rounded-lg">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+        <div className="bg-slate-800/50 p-3 rounded-lg">
           <p className="text-tertiary mb-0.5">Venta</p>
           <p className="text-sm font-medium text-white">{result.sale_type}</p>
         </div>
-        <div className="bg-white/5 p-3 rounded-lg">
+        <div className="bg-slate-800/50 p-3 rounded-lg">
           <p className="text-tertiary mb-0.5">Emoción</p>
           <p className="text-sm font-medium text-white">{result.emotion}</p>
         </div>
-        <div className="bg-white/5 p-3 rounded-lg">
+        <div className="bg-slate-800/50 p-3 rounded-lg">
           <p className="text-tertiary mb-0.5">Tono</p>
           <p className="text-sm font-medium text-white">{result.tone}</p>
         </div>
-        <div className="bg-white/5 p-3 rounded-lg">
+        <div className="bg-slate-800/50 p-3 rounded-lg">
           <p className="text-tertiary mb-0.5">Estilo</p>
           <p className="text-sm font-medium text-white">{result.style}</p>
         </div>
       </div>
 
-      <div className="space-y-4">
-        <div className="bg-white/5 p-4 rounded-lg">
+      <div className="space-y-3">
+        <div className="bg-slate-800/50 p-3 rounded-lg">
           <p className="text-tertiary mb-1">Texto Overlay</p>
-          <p className="text-xl font-bold text-white">{result.text_overlay}</p>
+          <p className="text-lg font-bold text-white">{result.text_overlay}</p>
         </div>
         
-        <div className="bg-white/5 p-4 rounded-lg">
+        <div className="bg-slate-800/50 p-3 rounded-lg">
           <p className="text-tertiary mb-1">Call to Action</p>
           <p className="text-sm text-white">{result.cta}</p>
         </div>
 
-        <div className="bg-white/5 p-4 rounded-lg">
+        <div className="bg-slate-800/50 p-3 rounded-lg">
           <p className="text-tertiary mb-2">Triggers Psicológicos</p>
           <div className="flex gap-1.5 flex-wrap">
             {result.psychological_triggers.map((t, i) => (
@@ -66,13 +66,13 @@ export default function ResultPanel({ result }: ResultPanelProps) {
           </div>
         </div>
 
-        <div className="bg-white/5 p-4 rounded-lg">
+        <div className="bg-slate-800/50 p-3 rounded-lg">
           <p className="text-tertiary mb-2">Paleta de Colores</p>
           <div className="flex gap-1.5">
             {result.color_palette.map((c, i) => (
               <div
                 key={i}
-                className="w-7 h-7 rounded-lg border border-white/10"
+                className="w-6 h-6 rounded border border-slate-700"
                 style={{ backgroundColor: c }}
                 title={c}
               />
@@ -80,7 +80,7 @@ export default function ResultPanel({ result }: ResultPanelProps) {
           </div>
         </div>
 
-        <div className="bg-white/5 p-4 rounded-lg">
+        <div className="bg-slate-800/50 p-3 rounded-lg">
           <p className="text-tertiary mb-2">Hashtags</p>
           <div className="flex gap-1.5 flex-wrap">
             {result.hashtags.map((h, i) => (
@@ -92,18 +92,18 @@ export default function ResultPanel({ result }: ResultPanelProps) {
         </div>
 
         {result.diffusion_message && (
-          <div className="pt-4 border-t border-[#27272a]">
+          <div className="pt-3 border-t border-slate-800">
             <div className="flex items-center justify-between mb-2">
               <p className="text-tertiary">Difusión WhatsApp</p>
               <button
                 onClick={() => copyToClipboard(result.diffusion_message, 'wa')}
-                className="flex items-center gap-1 text-xs text-[#71717a] hover:text-white transition-colors"
+                className="flex items-center gap-1 text-xs text-slate-500 hover:text-white transition-colors"
               >
                 {copied === 'wa' ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
                 {copied === 'wa' ? 'Copiado' : 'Copiar'}
               </button>
             </div>
-            <pre className="text-xs text-[#a1a1aa] whitespace-pre-wrap font-mono bg-[#09090b] p-3 rounded-lg border border-[#27272a]">
+            <pre className="text-xs text-slate-400 whitespace-pre-wrap font-mono bg-slate-950 p-3 rounded-lg border border-slate-800">
               {result.diffusion_message}
             </pre>
           </div>
