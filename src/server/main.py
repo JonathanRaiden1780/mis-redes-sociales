@@ -44,6 +44,7 @@ class AmplifyRequest(BaseModel):
 class AmplifyResponse(BaseModel):
     success: bool
     campaign_id: int | None = None
+    llm_enhanced: bool = False
     amplified_prompt: str
     image_prompt: str
     video_script: list[dict]
