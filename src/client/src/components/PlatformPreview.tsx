@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Copy, Check, Edit3, Image, Video, Loader2 } from 'lucide-react'
+import { Copy, Check, Edit3, Image, Video, Loader2, AlertCircle } from 'lucide-react'
 import type { Platform } from '../types'
 
 interface PlatformPreviewProps {
@@ -15,6 +15,7 @@ export default function PlatformPreview({ platform, prompt, format, hashtags, co
   const [copied, setCopied] = useState(false)
   const [generating, setGenerating] = useState(false)
   const [generatedType, setGeneratedType] = useState<string | null>(null)
+  const [generationResult, setGenerationResult] = useState<any>(null)
 
   function copyToClipboard() {
     navigator.clipboard.writeText(prompt)
@@ -25,6 +26,7 @@ export default function PlatformPreview({ platform, prompt, format, hashtags, co
   async function generateContent(type: 'image' | 'video') {
     setGenerating(true)
     setGeneratedType(type)
+    setGenerationResult(null)
     try {
       const res = await fetch(`/api/generate/${type}`, {
         method: 'POST',
@@ -32,14 +34,10 @@ export default function PlatformPreview({ platform, prompt, format, hashtags, co
         body: JSON.stringify({ campaign_id: campaignId, platform: platform.name.toLowerCase() }),
       })
       const data = await res.json()
-      if (data.success) {
-        alert(`Generación de ${type} iniciada: ${data.task_id}`)
-      } else {
-        alert(`Error: ${data.message}`)
-      }
+      setGenerationResult(data)
     } catch (err) {
       console.error(err)
-      alert('Error al generar contenido')
+      setGenerationResult({ success: false, message: 'Error de conexión' })
     } finally {
       setGenerating(false)
       setGeneratedType(null)
@@ -116,6 +114,27 @@ export default function PlatformPreview({ platform, prompt, format, hashtags, co
           </span>
         )}
       </div>
+
+      {generationResult && (
+        <div style={{
+          marginBottom: '12px',
+          padding: '8px',
+          borderRadius: '6px',
+          background: generationResult.fallback ? 'rgba(251, 191, 36, 0.1)' : 'rgba(16, 185, 129, 0.1)',
+          border: '1px solid ' + (generationResult.fallback ? 'rgba(251, 191, 36, 0.3)' : 'rgba(16, 185, 129, 0.3)')
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            {generationResult.fallback ? (
+              <AlertCircle style={{ width: '12px', height: '12px', color: '#fbbf24' }} />
+            ) : (
+              <Check style={{ width: '12px', height: '12px', color: '#34d399' }} />
+            )}
+            <span style={{ fontSize: '11px', color: generationResult.fallback ? '#fbbf24' : '#34d399' }}>
+              {generationResult.fallback ? 'Modo placeholder (Agnes no disponible)' : 'Contenido generado'}
+            </span>
+          </div>
+        </div>
+      )}
 
       <div style={{ display: 'flex', gap: '6px', paddingTop: '12px', borderTop: '1px solid #1e293b' }}>
         <button

@@ -15,7 +15,7 @@ from src.server.core.agnes_client import (
 )
 from src.server.core.content_generator import (
     ContentGenerationService,
-    GeneratedContent,
+    GenerationResult,
     GenerationConfig,
 )
 from src.server.core.social_clients import (
@@ -68,8 +68,8 @@ def test_task_result_completed():
 
 
 def test_generated_content_creation():
-    """Test GeneratedContent instantiation."""
-    content = GeneratedContent(
+    """Test GenerationResult instantiation."""
+    content = GenerationResult(
         content_id="gen-001",
         type="image",
         platform="instagram",
