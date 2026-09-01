@@ -6,16 +6,16 @@ interface AmplifyPanelProps {
   loading: boolean
 }
 
+const examples = [
+  { text: 'promoción de perfumes 2x800 pesos', icon: '🌸' },
+  { text: '2x1 en zapatos 500 pesos', icon: '👟' },
+  { text: 'descuento 30% en electrónica', icon: '💻' },
+  { text: 'nueva colección de lujo', icon: '✨' },
+]
+
 export default function AmplifyPanel({ onResult, onLoading, loading }: AmplifyPanelProps) {
   const [idea, setIdea] = useState('')
   const [style, setStyle] = useState('')
-
-  const examples = [
-    'promoción de perfumes 2x800 pesos',
-    '2x1 en zapatos 500 pesos, oferta limitada',
-    'descuento 30% en electrónica, solo hoy',
-    'nueva colección de lujo, exclusivo',
-  ]
 
   async function handleAmplify() {
     if (!idea.trim()) return
@@ -36,14 +36,19 @@ export default function AmplifyPanel({ onResult, onLoading, loading }: AmplifyPa
   }
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6">
-      <h2 className="text-lg font-semibold mb-4">🧠 AI Prompt Amplifier</h2>
+    <div className="card p-6 sticky top-24">
+      <div className="flex items-center gap-2 mb-6">
+        <span className="text-2xl">🧠</span>
+        <h2 className="text-lg font-bold">AI Prompt Amplifier</h2>
+      </div>
       
       <div className="space-y-4">
         <div>
-          <label className="block text-sm text-gray-400 mb-1">Tu idea de promoción</label>
+          <label className="block text-sm font-medium text-gray-300 mb-2">
+            Tu idea de promoción
+          </label>
           <textarea
-            className="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none resize-none"
+            className="input-field w-full text-white p-4 rounded-xl resize-none text-sm"
             rows={4}
             placeholder="Ej: promoción de perfumes 2x800 pesos"
             value={idea}
@@ -52,41 +57,44 @@ export default function AmplifyPanel({ onResult, onLoading, loading }: AmplifyPa
         </div>
 
         <div>
-          <label className="block text-sm text-gray-400 mb-1">Estilo (opcional)</label>
+          <label className="block text-sm font-medium text-gray-300 mb-2">
+            Estilo (opcional)
+          </label>
           <select
-            className="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
+            className="input-field w-full text-white p-3 rounded-xl text-sm"
             value={style}
             onChange={(e) => setStyle(e.target.value)}
           >
-            <option value="">Auto-detectar</option>
-            <option value="luxury">Lujo</option>
-            <option value="premium">Premium</option>
-            <option value="elegant">Elegante</option>
-            <option value="budget">Económico</option>
-            <option value="trending">Tendencia</option>
-            <option value="hot">Hot</option>
+            <option value="">🎯 Auto-detectar</option>
+            <option value="luxury">💎 Lujo</option>
+            <option value="premium">⭐ Premium</option>
+            <option value="elegant">🌙 Elegante</option>
+            <option value="budget">💰 Económico</option>
+            <option value="trending">🔥 Tendencia</option>
+            <option value="hot">🌶️ Hot</option>
           </select>
         </div>
 
         <button
           onClick={handleAmplify}
           disabled={loading || !idea.trim()}
-          className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-medium transition-colors"
+          className="btn-primary w-full text-white px-6 py-3.5 rounded-xl font-semibold text-sm"
         >
-          {loading ? '⏳ Amplificando...' : '🚀 Amplificar'}
+          {loading ? '⏳ Amplificando...' : '🚀 Amplificar Idea'}
         </button>
       </div>
 
-      <div className="mt-4 pt-4 border-t border-gray-700">
-        <p className="text-xs text-gray-500 mb-2">Ejemplos rápidos:</p>
-        <div className="flex flex-wrap gap-1">
+      <div className="mt-6 pt-6 border-t border-white/5">
+        <p className="text-xs text-gray-500 mb-3">Ejemplos rápidos:</p>
+        <div className="grid grid-cols-2 gap-2">
           {examples.map((ex, i) => (
             <button
               key={i}
-              onClick={() => setIdea(ex)}
-              className="text-xs px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 text-gray-300 transition-colors"
+              onClick={() => setIdea(ex.text)}
+              className="text-xs px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white transition-all text-left"
             >
-              {ex.slice(0, 25)}...
+              <span className="mr-1">{ex.icon}</span>
+              {ex.text.slice(0, 18)}...
             </button>
           ))}
         </div>
