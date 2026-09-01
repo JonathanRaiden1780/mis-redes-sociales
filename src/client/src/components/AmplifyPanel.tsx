@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Sparkles, Wand2, Type, Palette, TrendingUp, Crown, Gem, Flame, DollarSign } from 'lucide-react'
 
 interface AmplifyPanelProps {
   onResult: (result: any) => void
@@ -7,10 +8,20 @@ interface AmplifyPanelProps {
 }
 
 const examples = [
-  'promoción de perfumes 2x800 pesos',
-  '2x1 en zapatos 500 pesos, oferta limitada',
-  'descuento 30% en electrónica, solo hoy',
-  'nueva colección de lujo, exclusivo',
+  { text: 'promoción de perfumes 2x800 pesos', icon: '🌸' },
+  { text: '2x1 en zapatos 500 pesos, oferta limitada', icon: '👟' },
+  { text: 'descuento 30% en electrónica, solo hoy', icon: '💻' },
+  { text: 'nueva colección de lujo, exclusivo', icon: '✨' },
+]
+
+const styleOptions = [
+  { value: '', label: 'Auto-detectar', icon: Sparkles },
+  { value: 'luxury', label: 'Lujo', icon: Gem },
+  { value: 'premium', label: 'Premium', icon: Crown },
+  { value: 'elegant', label: 'Elegante', icon: Palette },
+  { value: 'budget', label: 'Económico', icon: DollarSign },
+  { value: 'trending', label: 'Tendencia', icon: TrendingUp },
+  { value: 'hot', label: 'Hot', icon: Flame },
 ]
 
 export default function AmplifyPanel({ onResult, onLoading, loading }: AmplifyPanelProps) {
@@ -36,64 +47,100 @@ export default function AmplifyPanel({ onResult, onLoading, loading }: AmplifyPa
   }
 
   return (
-    <div className="surface p-5 space-y-5">
-      <div>
-        <h2 className="text-sm font-medium text-white mb-1">Prompt de Amplificación</h2>
-        <p className="text-tertiary">Convierte tu idea en contenido para redes</p>
-      </div>
-
-      <div className="space-y-4">
-        <div>
-          <label className="label" htmlFor="idea-input">Tu idea</label>
-          <textarea
-            id="idea-input"
-            className="input resize-none"
-            rows={3}
-            placeholder="Ej: promoción de perfumes 2x800 pesos"
-            value={idea}
-            onChange={(e) => setIdea(e.target.value)}
-          />
+    <div className="space-y-6 sticky top-24">
+      {/* Input Card */}
+      <div className="surface p-6 glow-purple">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center">
+            <Wand2 className="w-4 h-4 text-violet-400" />
+          </div>
+          <div>
+            <h2 className="text-sm font-semibold text-white">Prompt de Amplificación</h2>
+            <p className="text-tertrix">Convierte tu idea en contenido para redes</p>
+          </div>
         </div>
 
-        <div>
-          <label className="label" htmlFor="style-select">Estilo</label>
-          <select
-            id="style-select"
-            className="input"
-            value={style}
-            onChange={(e) => setStyle(e.target.value)}
+        <div className="space-y-4">
+          {/* Idea Input */}
+          <div>
+            <label className="label" htmlFor="idea-input">
+              <span className="flex items-center gap-1.5">
+                <Type className="w-3.5 h-3.5" />
+                Tu idea
+              </span>
+            </label>
+            <div className="relative">
+              <textarea
+                id="idea-input"
+                className="input-ai resize-none pr-12"
+                rows={4}
+                placeholder="Ej: promoción de perfumes 2x800 pesos"
+                value={idea}
+                onChange={(e) => setIdea(e.target.value)}
+                maxLength={500}
+              />
+              <div className="absolute bottom-3 right-3 flex items-center gap-2">
+                <span className="text-tertiary text-xs">{idea.length}/500</span>
+                <Sparkles className="w-4 h-4 text-violet-400/50" />
+              </div>
+            </div>
+          </div>
+
+          {/* Style Selector */}
+          <div>
+            <label className="label" htmlFor="style-select">
+              <span className="flex items-center gap-1.5">
+                <Palette className="w-3.5 h-3.5" />
+                Estilo
+              </span>
+            </label>
+            <select
+              id="style-select"
+              className="input-ai"
+              value={style}
+              onChange={(e) => setStyle(e.target.value)}
+            >
+              {styleOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Amplify Button */}
+          <button
+            onClick={handleAmplify}
+            disabled={loading || !idea.trim()}
+            className="btn btn-primary w-full py-3.5"
           >
-            <option value="">Auto-detectar</option>
-            <option value="luxury">Lujo</option>
-            <option value="premium">Premium</option>
-            <option value="elegant">Elegante</option>
-            <option value="budget">Económico</option>
-            <option value="trending">Tendencia</option>
-            <option value="hot">Hot</option>
-          </select>
+            {loading ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Amplificando...
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-4 h-4" />
+                Amplificar Idea
+              </>
+            )}
+          </button>
         </div>
-
-        <button
-          onClick={handleAmplify}
-          disabled={loading || !idea.trim()}
-          className="btn btn-primary w-full"
-        >
-          {loading ? 'Amplificando...' : 'Amplificar'}
-        </button>
       </div>
 
-      <div className="divider" />
-
-      <div>
-        <p className="text-tertiary mb-2">Ejemplos</p>
-        <div className="flex flex-wrap gap-1.5">
+      {/* Examples Card */}
+      <div className="surface p-5">
+        <p className="text-tertiary mb-3">Ejemplos rápidos</p>
+        <div className="flex flex-wrap gap-2">
           {examples.map((ex, i) => (
             <button
               key={i}
-              onClick={() => setIdea(ex)}
-              className="text-xs px-2.5 py-1.5 rounded-md border border-[#27272a] text-[#71717a] hover:text-white hover:border-[#3f3f46] transition-colors"
+              onClick={() => setIdea(ex.text)}
+              className="chip"
             >
-              {ex.length > 28 ? ex.slice(0, 28) + '...' : ex}
+              <span>{ex.icon}</span>
+              {ex.text.length > 24 ? ex.text.slice(0, 24) + '...' : ex.text}
             </button>
           ))}
         </div>
