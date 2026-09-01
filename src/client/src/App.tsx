@@ -1,107 +1,65 @@
 import { useState } from 'react'
+import AmplifyPanel from './components/AmplifyPanel'
+import ResultPanel from './components/ResultPanel'
+import PlatformGrid from './components/PlatformGrid'
+import type { AmplifyResponse } from './types'
 
 export default function App() {
-  const [idea, setIdea] = useState('')
-  const [result, setResult] = useState<any>(null)
+  const [result, setResult] = useState<AmplifyResponse | null>(null)
   const [loading, setLoading] = useState(false)
 
-  async function handleAmplify() {
-    if (!idea.trim()) return
-    setLoading(true)
-    try {
-      const res = await fetch('/api/amplify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idea }),
-      })
-      const data = await res.json()
-      setResult(data)
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setLoading(false)
-    }
-  }
-
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-8">
-      <h1 className="text-4xl font-bold mb-2">Mis Redes Sociales</h1>
-      <p className="text-gray-400 mb-8">Social Media Content Engine</p>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
-        <div className="bg-gray-800 rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-3">🧠 AI Prompt Amplifier</h2>
-          <textarea
-            className="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600"
-            rows={4}
-            placeholder="Ej: promoción de perfumes 2x800 pesos"
-            value={idea}
-            onChange={(e) => setIdea(e.target.value)}
-          />
-          <button
-            onClick={handleAmplify}
-            disabled={loading || !idea.trim()}
-            className="mt-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-6 py-2 rounded-lg font-medium transition-colors"
-          >
-            {loading ? 'Amplificando...' : '🚀 Amplificar'}
-          </button>
-        </div>
-
-        <div className="bg-gray-800 rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-3">🎯 Resultado</h2>
-          {result ? (
-            <div className="space-y-3 text-sm">
-              <div className="bg-gray-700 p-3 rounded">
-                <span className="text-gray-400">Venta:</span>{' '}
-                <span className="text-green-400 font-medium">{result.sale_type}</span>
-              </div>
-              <div className="bg-gray-700 p-3 rounded">
-                <span className="text-gray-400">Tono:</span>{' '}
-                <span className="text-yellow-400 font-medium">{result.tone}</span>
-              </div>
-              <div className="bg-gray-700 p-3 rounded">
-                <span className="text-gray-400">CTA:</span>{' '}
-                <span className="text-purple-400">{result.cta}</span>
-              </div>
-              <div className="bg-gray-700 p-3 rounded">
-                <span className="text-gray-400">Hashtags:</span>{' '}
-                <span className="text-blue-400">{result.hashtags?.join(' ')}</span>
-              </div>
-              {result.image_prompt && (
-                <div className="bg-gray-700 p-3 rounded">
-                  <span className="text-gray-400">Prompt de imagen:</span>
-                  <p className="text-gray-300 mt-1 text-xs">{result.image_prompt}</p>
-                </div>
-              )}
-              {result.diffusion_message && (
-                <div className="bg-gray-700 p-3 rounded">
-                  <span className="text-gray-400">Difusión WhatsApp:</span>
-                  <pre className="text-green-400 mt-1 whitespace-pre-wrap text-xs">{result.diffusion_message}</pre>
-                </div>
-              )}
+    <div className="min-h-screen bg-gray-900 text-white">
+      {/* Header */}
+      <header className="border-b border-gray-800 px-6 py-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-sm">
+              MR
             </div>
-          ) : (
-            <p className="text-gray-500">Introduce una idea y amplifícala</p>
-          )}
+            <h1 className="text-xl font-bold">Mis Redes Sociales</h1>
+          </div>
+          <p className="text-sm text-gray-400">AI Content Engine</p>
         </div>
+      </header>
 
-        <div className="bg-gray-800 rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-3">📱 Publicación</h2>
-          <div className="grid grid-cols-3 gap-2">
-            <button className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-3 rounded-lg text-sm font-medium">Instagram</button>
-            <button className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-3 rounded-lg text-sm font-medium border border-gray-600">TikTok</button>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg text-sm font-medium">Facebook</button>
+      {/* Main */}
+      <main className="max-w-7xl mx-auto p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Panel - Amplify */}
+          <div className="lg:col-span-1 space-y-6">
+            <AmplifyPanel 
+              onResult={setResult} 
+              onLoading={setLoading}
+              loading={loading}
+            />
+          </div>
+
+          {/* Right Panel - Results */}
+          <div className="lg:col-span-2 space-y-6">
+            {loading ? (
+              <div className="bg-gray-800 rounded-lg p-12 flex flex-col items-center justify-center">
+                <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4" />
+                <p className="text-gray-400">Amplificando tu idea...</p>
+              </div>
+            ) : result ? (
+              <div className="space-y-6">
+                <ResultPanel result={result} />
+                <PlatformGrid result={result} />
+              </div>
+            ) : (
+              <div className="bg-gray-800 rounded-lg p-12 text-center">
+                <p className="text-gray-500 text-lg mb-2">
+                  👋 Bienvenido al AI Content Engine
+                </p>
+                <p className="text-gray-600">
+                  Introduce tu idea de promoción y amplifícala para todas las plataformas
+                </p>
+              </div>
+            )}
           </div>
         </div>
-
-        <div className="bg-gray-800 rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-3">📩 WhatsApp</h2>
-          <p className="text-gray-400 text-sm mb-3">Difunde ofertas por WhatsApp</p>
-          <button className="w-full bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-medium transition-colors">
-            Enviar Difusión
-          </button>
-        </div>
-      </div>
+      </main>
     </div>
   )
 }
