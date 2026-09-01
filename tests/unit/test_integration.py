@@ -234,6 +234,38 @@ def test_scheduled_post_to_dict():
     print("✅ test_scheduled_post_to_dict")
 
 
+def test_whatsapp_config_defaults():
+    """Test WhatsAppConfig defaults."""
+    from src.server.core.social_clients.whatsapp import WhatsAppConfig
+
+    config = WhatsAppConfig()
+    assert config.base_url == "https://api.twilio.com/2010-04-01"
+    print("✅ test_whatsapp_config_defaults")
+
+
+def test_diffusion_result_creation():
+    """Test DiffusionResult instantiation."""
+    from src.server.core.social_clients.whatsapp import DiffusionResult
+
+    result = DiffusionResult(message_id="msg-123", success=True, status="sent")
+    assert result.message_id == "msg-123"
+    assert result.success is True
+    print("✅ test_diffusion_result_creation")
+
+
+def test_whatsapp_bot_config_attrs():
+    """Test WhatsAppDiffusionBot config attributes."""
+    from src.server.core.social_clients.whatsapp import WhatsAppConfig
+
+    config = WhatsAppConfig(
+        account_sid="AC123", auth_token="tok", from_number="whatsapp:+1"
+    )
+    assert config.account_sid == "AC123"
+    assert config.auth_token == "tok"
+    assert config.from_number == "whatsapp:+1"
+    print("✅ test_whatsapp_bot_config_attrs")
+
+
 if __name__ == "__main__":
     tests = [
         test_agnes_client_creation,
@@ -256,6 +288,9 @@ if __name__ == "__main__":
         test_campaign_to_dict,
         test_campaign_from_dict,
         test_scheduled_post_to_dict,
+        test_whatsapp_config_defaults,
+        test_diffusion_result_creation,
+        test_whatsapp_bot_config_attrs,
     ]
 
     passed = 0
